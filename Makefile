@@ -30,7 +30,7 @@ submission: $(CLASSES)
 %.class: %.java
 	$(JC) $(JCFLAGS) $<
 
-run:
+run: submission
 	$(JVM) $(DJAVA) $(JRFLAGS)
 
 clean:

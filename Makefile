@@ -23,8 +23,6 @@ FUNC=BentCigarFunction
 FUNCTION=$(subst .class,,$(FUNC))
 SEED=1
 
-
-
 all: submission
 
 submission: $(CLASSES)

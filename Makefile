@@ -10,28 +10,27 @@ SOURCES=$(PLAYER).java $(filter-out $(PLAYER).java, $(wildcard *.java))
 CLASSES=$(SOURCES:.java=.class)
 
 JAR=jar
-JARFLAGS=cmf
+JARCFLAGS=cmf
 SUBMISSION=submission.jar
-TEST_JAR=testrun.jar
 MANIFEST=MainClass.txt
 
 JVM=java
 DJAVA=-Djava.library.path="."
+JARRFLAGS=-$(JAR) testrun.jar
+RTARGS=-submission=$(PLAYER) -evaluation=$(FUNC) -seed=$(SEED)
 FUNC=BentCigarFunction
 SEED=1
-JRFLAGS=-$(JAR) $(TEST_JAR) -submission=$(PLAYER) -evaluation=$(FUNC) -seed=$(SEED)
-TMP=tmp
 
 all: submission
 
 submission: $(CLASSES)
-	$(JAR) $(JARFLAGS) $(MANIFEST) $(SUBMISSION) $(CLASSES)
+	$(JAR) $(JARCFLAGS) $(MANIFEST) $(SUBMISSION) $(CLASSES)
 
 %.class: %.java
 	$(JC) $(JCFLAGS) $<
 
 run: submission
-	$(JVM) $(DJAVA) $(JRFLAGS)
+	$(JVM) $(DJAVA) $(JARRFLAGS) $(RTARGS)
 
 clean:
-	rm -rf $(CLASSES) $(SUBMISSION) $(TMP)
+	rm -rf $(CLASSES) $(SUBMISSION) tmp

@@ -26,8 +26,8 @@ all: submission
 submission: $(CLASSES)
 	$(JAR) $(JARCFLAGS) $(MANIFEST) $(SUBMISSION) $(CLASSES)
 
-%.class: %.java
-	$(JC) $(JCFLAGS) $<
+$(CLASSES): $(SOURCES)
+	$(JC) $(JCFLAGS) $(SOURCES)
 
 run: submission
 	$(JVM) $(DJAVA) $(JARRFLAGS) $(RTARGS)

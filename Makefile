@@ -17,9 +17,13 @@ MANIFEST=MainClass.txt
 JVM=java
 DJAVA=-Djava.library.path="."
 JARRFLAGS=-$(JAR) testrun.jar
-RTARGS=-submission=$(PLAYER) -evaluation=$(FUNC) -seed=$(SEED)
+RTARGS=-submission=$(PLAYER) -evaluation=$(FUNCTION) -seed=$(SEED)
+
 FUNC=BentCigarFunction
+FUNCTION=$(subst .class,,$(FUNC))
 SEED=1
+
+
 
 all: submission
 

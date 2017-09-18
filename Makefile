@@ -23,16 +23,17 @@ FUNC=BentCigarFunction
 FUNCTION=$(subst .class,,$(FUNC))
 SEED=1
 
-all: submission
+all: $(SUBMISSION)
 
-submission: $(CLASSES)
+$(SUBMISSION): $(CLASSES)
 	$(JAR) $(JARCFLAGS) $(MANIFEST) $(SUBMISSION) $(CLASSES)
 
 $(CLASSES): $(SOURCES)
 	$(JC) $(JCFLAGS) $(SOURCES)
 
-run: submission
+run: $(SUBMISSION)
 	$(JVM) $(DJAVA) $(JARRFLAGS) $(RTARGS)
 
+.PHONY: clean
 clean:
 	rm -rf $(CLASSES) $(SUBMISSION) tmp

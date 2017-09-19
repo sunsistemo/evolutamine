@@ -23,7 +23,7 @@ FUNC=BentCigarFunction
 FUNCTION=$(subst .class,,$(FUNC))
 SEED=1
 
-all: $(SUBMISSION)
+FUNCTIONS=BentCigarFunction KatsuuraEvaluation SchaffersEvaluation
 
 $(SUBMISSION): $(CLASSES)
 	$(JAR) $(JARCFLAGS) $(MANIFEST) $(SUBMISSION) $(CLASSES)
@@ -31,9 +31,19 @@ $(SUBMISSION): $(CLASSES)
 $(CLASSES): $(SOURCES)
 	$(JC) $(JCFLAGS) $(SOURCES)
 
+.PHONY: all run runall clean
+
+all: $(SUBMISSION)
+
 run: $(SUBMISSION)
+	@echo $(FUNCTION) "seed="$(SEED) ; \
 	$(JVM) $(DJAVA) $(JARRFLAGS) $(RTARGS)
 
-.PHONY: clean
+runall: $(SUBMISSION)
+	@for f in $(FUNCTIONS) ; do \
+		echo $$f "seed="$(SEED) ; \
+		$(JVM) $(DJAVA) $(JARRFLAGS) $(RTARGS:$(FUNCTION)=$$f) ; \
+    done
+			
 clean:
 	rm -rf $(CLASSES) $(SUBMISSION) tmp

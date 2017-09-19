@@ -8,8 +8,8 @@ import java.util.Random;
 public class player50 implements ContestSubmission
 {
     Random rnd;
-    ContestEvaluation evaluation_;
-    private int evaluations_limit_;
+    ContestEvaluation evaluation;
+    private int evaluations_limit;
     private Population population;
     private final int populationSize = 100;
     String name;
@@ -29,12 +29,12 @@ public class player50 implements ContestSubmission
     public void setEvaluation(ContestEvaluation evaluation)
     {
         // Set evaluation problem used in the run
-        evaluation_ = evaluation;
+        this.evaluation = evaluation;
 
         // Get evaluation properties
         Properties props = evaluation.getProperties();
         // Get evaluation limit
-        evaluations_limit_ = Integer.parseInt(props.getProperty("Evaluations"));
+        evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
         // Property keys depend on specific evaluation
         // E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -55,24 +55,22 @@ public class player50 implements ContestSubmission
         int evals = 0;
 
         // init population
-        population = initPopulation();
-        population.populate(rnd);
+        population = initPopulation();        
 
         // calculate fitness
-        while (evals < evaluations_limit_) {
+        while (evals < evaluations_limit) {
             // Select parents
             // Apply crossover / mutation operators
             double child[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
             // Check fitness of unknown function
-            Double fitness = (double) evaluation_.evaluate(child);
+            Double fitness = (double) evaluation.evaluate(child);
             evals++;
-            // Select survivors
+            // Select survivors 
         }
-
     }
 
     private Population initPopulation()
     {
-        return new Population(populationSize);
+        return new Population(populationSize, rnd);
     }
 }

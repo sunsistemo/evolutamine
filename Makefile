@@ -4,7 +4,7 @@
 
 JC=javac
 JCFLAGS=-cp contest.jar
-PLAYER=player109
+PLAYER=player50
 
 SOURCES=$(PLAYER).java $(filter-out $(PLAYER).java, $(wildcard *.java))
 CLASSES=$(SOURCES:.java=.class)

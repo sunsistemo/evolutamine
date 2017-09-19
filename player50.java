@@ -5,13 +5,13 @@ import java.util.Random;
 import java.util.Properties;
 
 
-public class player109 implements ContestSubmission
+public class player50 implements ContestSubmission
 {
     Random rnd_;
     ContestEvaluation evaluation_;
     private int evaluations_limit_;
 
-    public player109()
+    public player50()
     {
         rnd_ = new Random();
     }

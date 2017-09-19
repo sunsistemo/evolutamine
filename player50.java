@@ -53,15 +53,16 @@ public class player50 implements ContestSubmission
     public void run()
     {
         // Run your algorithm here
-        int evals = 0;
+        int evals = evaluation_limit;
 
         // init population
         population = initPopulation();
 
         // calculate fitness
         population.calculateFitness(evaluation);
+        evals -= populationSize;
 
-        while (evals < evaluation_limit) {
+        while (evals > 0) {
             // Select parents
 
             // Apply crossover / mutation operators
@@ -76,7 +77,7 @@ public class player50 implements ContestSubmission
 
             // Select survivors
 
-            evals++;
+            evals -= populationSize;
         }
     }
 

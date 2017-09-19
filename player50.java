@@ -1,15 +1,16 @@
-import org.vu.contest.ContestEvaluation;
-import org.vu.contest.ContestSubmission;
-
+import java.lang.Exception;
 import java.util.Properties;
 import java.util.Random;
+
+import org.vu.contest.ContestEvaluation;
+import org.vu.contest.ContestSubmission;
 
 
 public class player50 implements ContestSubmission
 {
     Random rnd;
     ContestEvaluation evaluation;
-    private int evaluations_limit;
+    private int evaluation_limit;
     private Population population;
     private final int populationSize = 100;
     String name;
@@ -34,7 +35,7 @@ public class player50 implements ContestSubmission
         // Get evaluation properties
         Properties props = evaluation.getProperties();
         // Get evaluation limit
-        evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
+        evaluation_limit = Integer.parseInt(props.getProperty("Evaluations"));
         // Property keys depend on specific evaluation
         // E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -55,17 +56,27 @@ public class player50 implements ContestSubmission
         int evals = 0;
 
         // init population
-        population = initPopulation();        
+        population = initPopulation();
 
         // calculate fitness
-        while (evals < evaluations_limit) {
+        population.calculateFitness(evaluation);
+
+        while (evals < evaluation_limit) {
             // Select parents
+
             // Apply crossover / mutation operators
-            double child[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+
             // Check fitness of unknown function
-            Double fitness = (double) evaluation.evaluate(child);
+            try {
+                population.calculateFitness(evaluation);
+            } catch (NullPointerException e) {
+                System.out.println("\033[1mEvaluation limit reached!\033[0m");
+                break;
+            }
+
+            // Select survivors
+
             evals++;
-            // Select survivors 
         }
     }
 

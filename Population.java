@@ -1,6 +1,8 @@
 import java.util.Arrays;
 import java.util.Random;
 
+import org.vu.contest.ContestEvaluation;
+
 
 public class Population
 {
@@ -9,7 +11,7 @@ public class Population
     private double[] fitness;
     final int N = 10;
 
-    public Population(int size, Random rnd) 
+    public Population(int size, Random rnd)
     {
         this.size = size;
         population = new double[size][N];
@@ -29,10 +31,28 @@ public class Population
         }
     }
 
-    public void print() 
+    public void print()
     {
         for (int i = 0; i < size; i++) {
             System.out.println(Arrays.toString(population[i]));
         }
     }
+
+    public void calculateFitness(ContestEvaluation evaluation)
+    {
+        for (int i = 0; i < size; i++) {
+            fitness[i] = (double) evaluation.evaluate(population[i]);
+        }
+    }
+
+    public void printFitness()
+    {
+        System.out.println(Arrays.toString(fitness));
+    }
+
+    public void selectParents()
+    {
+
+    }
+
 }

@@ -52,11 +52,10 @@ public class player50 implements ContestSubmission
 
     public void run()
     {
-        // Run your algorithm here
         int evals = evaluation_limit;
 
         // init population
-        population = initPopulation();
+        population = new Population(populationSize, rnd);
 
         // calculate fitness
         population.calculateFitness(evaluation);
@@ -70,19 +69,13 @@ public class player50 implements ContestSubmission
             // Check fitness of unknown function
             try {
                 population.calculateFitness(evaluation);
+                evals -= populationSize;
             } catch (NullPointerException e) {
                 System.out.println("\033[1mEvaluation limit reached!\033[0m");
                 break;
             }
 
             // Select survivors
-
-            evals -= populationSize;
         }
-    }
-
-    private Population initPopulation()
-    {
-        return new Population(populationSize, rnd);
     }
 }

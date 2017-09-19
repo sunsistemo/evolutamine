@@ -6,10 +6,10 @@ import org.vu.contest.ContestEvaluation;
 
 public class Population
 {
-    int size;
+    private int size;
     private double[][] population;
-    private double[] fitness;
-    final int N = 10;
+    private double[] fitness;    
+    private final int N = 10;
 
     public Population(int size, Random rnd)
     {
@@ -19,7 +19,7 @@ public class Population
         populate(rnd);
     }
 
-    public void populate(Random rnd)
+    private void populate(Random rnd)
     {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < N; j++) {
@@ -52,7 +52,6 @@ public class Population
 
     public void selectParents()
     {
-
+        
     }
-
 }

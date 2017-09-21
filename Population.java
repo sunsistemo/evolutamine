@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.vu.contest.ContestEvaluation;
@@ -12,7 +13,8 @@ public class Population
     private double[] fitness;
     private double[] propFitness;    
     private final int N = 10;
-    private ArrayList<double[]> matingPool;
+    private List<double[]> matingPool;
+    private List<double[]> offspring;
     private final int numParents = 2;
 
     public Population(int size, Random rnd)
@@ -22,6 +24,7 @@ public class Population
         fitness = new double[size];
         propFitness = new double[size];
         matingPool = new ArrayList<double[]>();
+        offspring = new ArrayList<double[]>();
         populate(rnd);        
     }
 
@@ -128,13 +131,27 @@ public class Population
     public void crossover()
     {
         double[][] parents = new double[numParents][N];
-        double[][] offspring = new double[numParents][N];
+        double[][] children = new double[numParents][N];
         Random rnd = new Random();
+        
         for (int i = 0; i < numParents; i++) {
             int index = rnd.nextInt(matingPool.size());
             parents[i] = matingPool.get(index);
             matingPool.remove(index);
         }
         
+        int parent = 0;
+        int split = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
+        for (int j = 0; j < N; j++) {
+            if (j == split) {
+                parent = 1 - parent;
+            }
+            children[0][j] = parents[parent][j];
+            children[1][j] = parents[1-parent][j];
+        }
+        
+        for (int i = 0; i < numParents; i++) {
+            offspring.add(children[i]);
+        }        
     }
 }

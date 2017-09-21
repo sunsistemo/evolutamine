@@ -31,7 +31,10 @@ public class Population
         matingPool = new ArrayList<double[]>();
         populate(rnd);        
     }
-
+    
+    /*
+     * Private (auxiliary) functions
+     */ 
     private void populate(Random rnd)
     {
         for (int i = 0; i < size; i++) {
@@ -44,82 +47,6 @@ public class Population
         }
     }
 
-    public void print()
-    {
-        for (int i = 0; i < size; i++) {
-            System.out.println(Arrays.toString(population[i]));
-        }
-    }
-
-    public void calculateFitness(ContestEvaluation evaluation)
-    {
-        double totalFitness = 0.0;
-        for (int i = 0; i < size; i++) {
-            fitness[i] = (double) evaluation.evaluate(population[i]);
-            totalFitness += fitness[i];
-        }
-        for (int i = 0; i < size; i++) {
-            propFitness[i] = fitness[i] / totalFitness;
-        }
-    }
-    
-    public void calculateFitnessOffspring(ContestEvaluation evaluation)
-    {
-        fitnessOffspring = new double[size];
-        propFitnessOffspring = new double[size];
-        double totalFitness = 0.0;
-        
-        for (int i = 0; i < size; i++) {
-            fitnessOffspring[i] = (double) evaluation.evaluate(offspring[i]);
-            totalFitness += fitnessOffspring[i];
-        }
-        for (int i = 0; i < size; i++) {
-            propFitnessOffspring[i] = fitnessOffspring[i] / totalFitness;
-        }
-    }
-
-    public void printFitness()
-    {
-        System.out.println(Arrays.toString(fitness));
-    }
-    
-    public void printPropFitness()
-    {
-        Arrays.sort(propFitness);
-        System.out.println(Arrays.toString(propFitness));
-    }
-
-    public void printFittest(int n)
-    {
-        System.out.println(Arrays.toString(getFittest(n)));
-    }
-    
-    
-    public void selectParents()
-    {
-        // First version: Generational model
-        matingPool.clear();
-        
-        // roulette wheel algorithm p.83
-        Random rnd = new Random();
-        while (matingPool.size() < size) {
-            double r = rnd.nextDouble();
-            double cumProbability = 0.0;
-            int i = 0;
-            while ((cumProbability += propFitness[i]) < r) {
-                i++;
-            }
-            matingPool.add(population[i]);
-        }
-    }
-    
-    public void printParents()
-    {
-        for (double[] cand:matingPool) {
-            System.out.println(Arrays.toString(cand));
-        }
-    }
-    
     private int[] getFittest(int n)
     {
         int[] elite = new int[n];
@@ -144,6 +71,55 @@ public class Population
             }
         }
         return minIndex;
+    }
+
+    /*
+     * EA Components
+     */ 
+    public void calculateFitness(ContestEvaluation evaluation)
+    {
+        double totalFitness = 0.0;
+        for (int i = 0; i < size; i++) {
+            fitness[i] = (double) evaluation.evaluate(population[i]);
+            totalFitness += fitness[i];
+        }
+        for (int i = 0; i < size; i++) {
+            propFitness[i] = fitness[i] / totalFitness;
+        }
+    }
+    
+    // VERY ugly to have a seperate function for this. rethink data structures...
+    public void calculateFitnessOffspring(ContestEvaluation evaluation)
+    {
+        fitnessOffspring = new double[size];
+        propFitnessOffspring = new double[size];
+        double totalFitness = 0.0;
+        
+        for (int i = 0; i < size; i++) {
+            fitnessOffspring[i] = (double) evaluation.evaluate(offspring[i]);
+            totalFitness += fitnessOffspring[i];
+        }
+        for (int i = 0; i < size; i++) {
+            propFitnessOffspring[i] = fitnessOffspring[i] / totalFitness;
+        }
+    }
+    
+    public void selectParents()
+    {
+        // First version: Generational model
+        matingPool.clear();
+        
+        // roulette wheel algorithm p.83
+        Random rnd = new Random();
+        while (matingPool.size() < size) {
+            double r = rnd.nextDouble();
+            double cumProbability = 0.0;
+            int i = 0;
+            while ((cumProbability += propFitness[i]) < r) {
+                i++;
+            }
+            matingPool.add(population[i]);
+        }
     }
     
     public void crossover()
@@ -186,5 +162,20 @@ public class Population
         offspring = null;
         fitnessOffspring = null;
         propFitnessOffspring = null;        
+    }
+    
+    /* 
+     * Print functions 
+     */
+    public void print()
+    {
+        for (int i = 0; i < size; i++) {
+            System.out.println(Arrays.toString(population[i]));
+        }
+    }
+    
+    public void printFitness()
+    {
+        System.out.println(Arrays.toString(fitness));
     }
 }

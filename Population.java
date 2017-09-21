@@ -13,6 +13,7 @@ public class Population
     private double[] propFitness;    
     private final int N = 10;
     private ArrayList<double[]> matingPool;
+    private final int numParents = 2;
 
     public Population(int size, Random rnd)
     {
@@ -124,8 +125,16 @@ public class Population
         return minIndex;
     }
     
-    public void crossover(int n)
+    public void crossover()
     {
+        double[][] parents = new double[numParents][N];
+        double[][] offspring = new double[numParents][N];
+        Random rnd = new Random();
+        for (int i = 0; i < numParents; i++) {
+            int index = rnd.nextInt(matingPool.size());
+            parents[i] = matingPool.get(index);
+            matingPool.remove(index);
+        }
         
     }
 }

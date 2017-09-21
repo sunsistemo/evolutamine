@@ -12,8 +12,9 @@ public class Population
     private double[][] population;
     private double[][] offspring;
     private double[] fitness;
-    private double[] propFitness;
     private double[] fitnessOffspring;
+    private double[] propFitness;
+    private double[] propFitnessOffspring;
     private final int N = 10;
     private List<double[]> matingPool;
     private final int numParents = 2;
@@ -24,8 +25,9 @@ public class Population
         population = new double[size][N];
         offspring = null;
         fitness = new double[size];
-        propFitness = new double[size];
         fitnessOffspring = null;
+        propFitness = new double[size];
+        propFitnessOffspring = null;
         matingPool = new ArrayList<double[]>();
         populate(rnd);        
     }
@@ -64,8 +66,15 @@ public class Population
     public void calculateFitnessOffspring(ContestEvaluation evaluation)
     {
         fitnessOffspring = new double[size];
+        propFitnessOffspring = new double[size];
+        double totalFitness = 0.0;
+        
         for (int i = 0; i < size; i++) {
             fitnessOffspring[i] = (double) evaluation.evaluate(offspring[i]);
+            totalFitness += fitnessOffspring[i];
+        }
+        for (int i = 0; i < size; i++) {
+            propFitnessOffspring[i] = fitnessOffspring[i] / totalFitness;
         }
     }
 
@@ -166,5 +175,17 @@ public class Population
                 offspring[i] = children[j];
             }
         }
+    }
+    
+    public void selectSurvivors()
+    {
+        // First version: Generational model. entire generation is replaced by offspring        
+        population = offspring;
+        fitness = fitnessOffspring;
+        propFitness = propFitnessOffspring;
+        
+        offspring = null;
+        fitnessOffspring = null;
+        propFitnessOffspring = null;        
     }
 }

@@ -64,6 +64,7 @@ public class player50 implements ContestSubmission
         population.selectParents();
         population.crossover();
         population.calculateFitnessOffspring(evaluation);
+        population.selectSurvivors();
         
         while (evals > 0 && false) {
             // Select parents

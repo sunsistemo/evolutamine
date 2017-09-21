@@ -10,21 +10,23 @@ public class Population
 {
     private int size;
     private double[][] population;
+    private double[][] offspring;
     private double[] fitness;
-    private double[] propFitness;    
+    private double[] propFitness;
+    private double[] fitnessOffspring;
     private final int N = 10;
     private List<double[]> matingPool;
-    private List<double[]> offspring;
     private final int numParents = 2;
 
     public Population(int size, Random rnd)
     {
         this.size = size;
         population = new double[size][N];
+        offspring = null;
         fitness = new double[size];
         propFitness = new double[size];
+        fitnessOffspring = null;
         matingPool = new ArrayList<double[]>();
-        offspring = new ArrayList<double[]>();
         populate(rnd);        
     }
 
@@ -56,6 +58,14 @@ public class Population
         }
         for (int i = 0; i < size; i++) {
             propFitness[i] = fitness[i] / totalFitness;
+        }
+    }
+    
+    public void calculateFitnessOffspring(ContestEvaluation evaluation)
+    {
+        fitnessOffspring = new double[size];
+        for (int i = 0; i < size; i++) {
+            fitnessOffspring[i] = (double) evaluation.evaluate(offspring[i]);
         }
     }
 
@@ -130,28 +140,31 @@ public class Population
     
     public void crossover()
     {
+        offspring = new double[size][N];
         double[][] parents = new double[numParents][N];
         double[][] children = new double[numParents][N];
         Random rnd = new Random();
         
-        for (int i = 0; i < numParents; i++) {
-            int index = rnd.nextInt(matingPool.size());
-            parents[i] = matingPool.get(index);
-            matingPool.remove(index);
-        }
-        
-        int parent = 0;
-        int split = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
-        for (int j = 0; j < N; j++) {
-            if (j == split) {
-                parent = 1 - parent;
+        for (int i = 0; i< size; i += numParents) {
+            for (int j = 0; j < numParents; j++) {
+                int index = rnd.nextInt(matingPool.size());
+                parents[j] = matingPool.get(index);
+                matingPool.remove(index);
             }
-            children[0][j] = parents[parent][j];
-            children[1][j] = parents[1-parent][j];
+            
+            int parent = 0;
+            int split = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
+            for (int j = 0; j < N; j++) {
+                if (j == split) {
+                    parent = 1 - parent;
+                }
+                children[0][j] = parents[parent][j];
+                children[1][j] = parents[1-parent][j];
+            }
+            
+            for (int j = 0; j < numParents; j++) {
+                offspring[i] = children[j];
+            }
         }
-        
-        for (int i = 0; i < numParents; i++) {
-            offspring.add(children[i]);
-        }        
     }
 }

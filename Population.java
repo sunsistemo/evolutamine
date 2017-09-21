@@ -99,15 +99,14 @@ public class Population
     {
         // First version: Generational model
         matingPool.clear();
-        //System.out.println("Mating Pool size: " + matingPool.size());
+        
         // roulette wheel algorithm p.83
         Random rnd = new Random();
         while (matingPool.size() < size) {
             double r = rnd.nextDouble();
             double cumProbability = 0.0;
             int i = 0;
-            while (cumProbability < r) {
-                cumProbability += propFitness[i];
+            while ((cumProbability += propFitness[i]) < r) {
                 i++;
             }
             matingPool.add(population[i]);

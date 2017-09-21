@@ -12,7 +12,7 @@ public class player50 implements ContestSubmission
     ContestEvaluation evaluation;
     private int evaluation_limit;
     private Population population;
-    private final int populationSize = 10;
+    private final int populationSize = 100;
     String name;
 
     public player50()
@@ -61,20 +61,16 @@ public class player50 implements ContestSubmission
         population.calculateFitness(evaluation);
         evals -= populationSize;
         
-        population.selectParents();
-        population.crossover();
-        population.calculateFitnessOffspring(evaluation);
-        population.selectSurvivors();
-        
-        while (evals > 0 && false) {
+        while (evals > 0) {
             // Select parents
-            
+            population.selectParents();
             
             // Apply crossover / mutation operators
+            population.crossover();
 
             // Check fitness of unknown function
             try {
-                population.calculateFitness(evaluation);
+                population.calculateFitnessOffspring(evaluation);
                 evals -= populationSize;
             } catch (NullPointerException e) {
                 System.out.println("\033[1mEvaluation limit reached!\033[0m");
@@ -82,6 +78,7 @@ public class player50 implements ContestSubmission
             }
 
             // Select survivors
+            population.selectSurvivors();
         }
     }
 }

@@ -12,7 +12,7 @@ public class player50 implements ContestSubmission
     ContestEvaluation evaluation;
     private int evaluation_limit;
     private Population population;
-    private final int populationSize = 100;
+    private final int populationSize = 20;
     String name;
 
     public player50()
@@ -60,8 +60,8 @@ public class player50 implements ContestSubmission
         // calculate fitness
         population.calculateFitness(evaluation);
         evals -= populationSize;
-
-        while (evals > 0) {
+        
+        while (evals > 0 && false) {
             // Select parents
 
             // Apply crossover / mutation operators

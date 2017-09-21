@@ -50,8 +50,39 @@ public class Population
         System.out.println(Arrays.toString(fitness));
     }
 
+    public void printFittest(int n)
+    {
+        System.out.println(Arrays.toString(getFittest(n)));
+    }
+    
     public void selectParents()
     {
         
+    }
+    
+    public int[] getFittest(int n)
+    {
+        int[] elite = new int[n];
+        for (int i = 0; i < n; i++) {
+            elite[i] = i;
+        }
+        for (int i = n; i < size; i++) {
+            int index = minFitness(elite);
+            if (fitness[i] > fitness[elite[index]]) {
+                elite[index] = i;
+            }
+        }
+        return elite;
+    }
+    
+    private int minFitness(int[] indices)
+    {
+        int minIndex = 0;
+        for (int i = 0; i < indices.length; i++) {
+            if (fitness[indices[i]] < fitness[indices[minIndex]]) {
+                minIndex = i;
+            }
+        }
+        return minIndex;
     }
 }

@@ -61,7 +61,7 @@ public class player50 implements ContestSubmission
         population.calculateFitness(evaluation);
         evals -= populationSize;
         
-        while (evals > 0 && false) {
+        while (evals > 0) {
             // Select parents
 
             // Apply crossover / mutation operators

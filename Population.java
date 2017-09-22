@@ -80,21 +80,15 @@ public class Population
         // Stochastic Universal Sampling (SUS) algorithm p.84
         Random rnd = new Random();
         double r = (rnd.nextDouble() / ((double) size));        
-        //System.out.printf("r/size: %.8f\n", r);
-        //System.out.println("1/size=" + (1/((double) size)));
         int i = 0;
         double cumProbability = 0.0;
         while (matingPool.size() < size) {
             Individual candidate = population.get(i);
             cumProbability += candidate.probability;
             
-            //System.out.println("i: " + i + " mating pool size: " + matingPool.size() + " cumProb: " + cumProbability);
-            int cycle = 1;
-            while (r <= cumProbability && cycle <= size) {
-                //System.out.println("cycle: " + cycle + " r: " + r + " cumProb: " + cumProbability + " Adding candidate: " + i);
+            while (r <= cumProbability) {
                 matingPool.add(candidate);
                 r += 1 / ((double) size);
-                cycle++;
             }
             
             i++;

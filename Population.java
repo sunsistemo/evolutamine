@@ -140,9 +140,4 @@ public class Population
         }
         */ 
     }
-    
-    public void printFitness()
-    {
-        //System.out.println(Arrays.toString(fitness));
-    }
 }

@@ -8,7 +8,7 @@ import org.vu.contest.ContestEvaluation;
 
 public class Population
 {
-    private int size;    
+    private int size;
     private List<Individual> population;
     private List<Individual> matingPool;
     private List<Individual> offspring;
@@ -25,7 +25,7 @@ public class Population
         matingPool = new ArrayList<Individual>();
         offspring = new ArrayList<Individual>();
         sumFitness = 0.0;
-        populate(rnd);        
+        populate(rnd);
     }
     
     
@@ -50,7 +50,7 @@ public class Population
     /*
      * EA Components
      */ 
-    public void calculateFitness(ContestEvaluation evaluation, String select)
+    public int calculateFitness(ContestEvaluation evaluation, String select)
     {
         List<Individual> candidates;
         if (select.equals("POPULATION")) {
@@ -69,6 +69,8 @@ public class Population
         for (Individual ind: candidates) {
             ind.probability = ind.fitness / sumFitness;
         }
+        
+        return candidates.size();
     }
        
     public void selectParents()
@@ -121,7 +123,7 @@ public class Population
     
     public void selectSurvivors()
     {
-        // First version: Generational model. entire generation is replaced by offspring        
+        // First version: Generational model. entire generation is replaced by offspring
         population.clear();
         for (Individual child: offspring) {
             population.add(child);
@@ -129,20 +131,14 @@ public class Population
         offspring.clear();
     }
     
+    
     /* 
-     * Print functions 
+     * Print functions
      */
     public void print()
     {
-        /*
         for (int i = 0; i < size; i++) {
-            System.out.println(Arrays.toString(population[i]));
-        }
-        */ 
-    }
-    
-    public void printFitness()
-    {
-        //System.out.println(Arrays.toString(fitness));
+            System.out.println(Arrays.toString(population.get(i).value));
+        } 
     }
 }

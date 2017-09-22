@@ -15,7 +15,6 @@ public class Population
     private final int N = 10;
     private final int numParents = 2;
     private double sumFitness;
-    public enum Select{POPULATION, OFFSPRING}
     
     
     public Population(int size, Random rnd)

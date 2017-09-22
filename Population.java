@@ -77,16 +77,27 @@ public class Population
         // First version: Generational model
         matingPool.clear();
         
-        // roulette wheel algorithm p.83
+        // Stochastic Universal Sampling (SUS) algorithm p.84
         Random rnd = new Random();
+        double r = (rnd.nextDouble() / ((double) size));        
+        //System.out.printf("r/size: %.8f\n", r);
+        //System.out.println("1/size=" + (1/((double) size)));
+        int i = 0;
+        double cumProbability = 0.0;
         while (matingPool.size() < size) {
-            double r = rnd.nextDouble();
-            double cumProbability = 0.0;
-            int i = 0;
-            while ((cumProbability += population.get(i).probability) < r) {
-                i++;
+            Individual candidate = population.get(i);
+            cumProbability += candidate.probability;
+            
+            //System.out.println("i: " + i + " mating pool size: " + matingPool.size() + " cumProb: " + cumProbability);
+            int cycle = 1;
+            while (r <= cumProbability && cycle <= size) {
+                //System.out.println("cycle: " + cycle + " r: " + r + " cumProb: " + cumProbability + " Adding candidate: " + i);
+                matingPool.add(candidate);
+                r += 1 / ((double) size);
+                cycle++;
             }
-            matingPool.add(population.get(i));
+            
+            i++;
         }
     }
     

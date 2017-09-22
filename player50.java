@@ -58,7 +58,7 @@ public class player50 implements ContestSubmission
         population = new Population(populationSize, rnd);
 
         // calculate fitness
-        population.calculateFitness(evaluation);
+        population.calculateFitness(evaluation, "POPULATION");
         evals -= populationSize;
         
         while (evals > 0) {
@@ -70,7 +70,7 @@ public class player50 implements ContestSubmission
 
             // Check fitness of unknown function
             try {
-                population.calculateFitnessOffspring(evaluation);
+                population.calculateFitness(evaluation, "OFFSPRING");
                 evals -= populationSize;
             } catch (NullPointerException e) {
                 System.out.println("\033[1mEvaluation limit reached!\033[0m");

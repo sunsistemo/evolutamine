@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Comparator;
 
 import org.vu.contest.ContestEvaluation;
 
@@ -125,7 +126,7 @@ public class Population
         }
     }
     
-    public void selectSurvivors()
+    public void replacePopulationWithOffspring()
     {
         // First version: Generational model. entire generation is replaced by offspring
         population.clear();
@@ -135,6 +136,24 @@ public class Population
         offspring.clear();
     }
     
+    public void selectSurvivors()
+    {
+        replacePopulationWithOffspring();
+        /*
+        // (m + l) selection. merge parents and offspring and keep top m
+        System.out.println("Size1: " + population.size());
+        print();
+        population.addAll(offspring);
+        System.out.println("Size2: " + population.size());
+        print();
+        population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder()));
+        System.out.println("Size3: " + population.size());
+        print();
+        population.subList(size, 2*size).clear();
+        System.out.println("Size4: " + population.size());
+        print();
+        */
+    }
     
     /* 
      * Print functions
@@ -144,5 +163,20 @@ public class Population
         for (int i = 0; i < size; i++) {
             System.out.println(Arrays.toString(population.get(i).value));
         } 
+    }
+    
+    public void printFitness()
+    {
+        int i = 0;
+        String s = "[";
+        for (Individual ind: population) {
+            s += (ind.fitness + ", ");
+            i++;
+            if (i % 8 == 0) {
+                s += "\n";
+            }
+        }
+        s += "]\n";
+        System.out.print(s);
     }
 }

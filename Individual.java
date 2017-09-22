@@ -12,6 +12,10 @@ public class Individual
         probability = 0.0;
     }
        
+    public double fitness()
+    {
+        return this.fitness;
+    }
     
     public void mutate()
     {

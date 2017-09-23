@@ -1,4 +1,5 @@
 import java.lang.Exception;
+import java.lang.Math;
 import java.util.Properties;
 import java.util.Random;
 
@@ -10,9 +11,9 @@ public class player50 implements ContestSubmission
 {
     Random rnd;
     ContestEvaluation evaluation;
-    private final int POPULATION_SIZE = 100;
     private final double MUTATION_RATE = 0.1;
     private int evaluation_limit;
+    private int populationSize;
     private Population population;
     String name;
 
@@ -20,6 +21,7 @@ public class player50 implements ContestSubmission
     {
         name = "evolutamine";
         rnd = new Random();
+        populationSize = 100;
     }
 
     public void setSeed(long seed)
@@ -37,6 +39,7 @@ public class player50 implements ContestSubmission
         Properties props = evaluation.getProperties();
         // Get evaluation limit
         evaluation_limit = Integer.parseInt(props.getProperty("Evaluations"));
+        populationSize = Math.max(100, (evaluation_limit/1000));
         // Property keys depend on specific evaluation
         // E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -45,9 +48,17 @@ public class player50 implements ContestSubmission
 
         // Do sth with property values, e.g. specify relevant settings of your algorithm
         if (isMultimodal) {
-            // Do sth
+            System.out.println("Function is multimodal.");
         } else {
             // Do sth else
+        }
+        
+        if (hasStructure) {
+            System.out.println("Function has structure.");
+        }
+        
+        if (isSeparable) {
+            System.out.println("Function is separable.");
         }
     }
 
@@ -58,7 +69,7 @@ public class player50 implements ContestSubmission
         
         
         // init population
-        population = new Population(POPULATION_SIZE, rnd);
+        population = new Population(populationSize, rnd);
         // calculate fitness
         evals -= population.calculateFitness(evaluation, "POPULATION");
         

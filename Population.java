@@ -155,8 +155,8 @@ public class Population
     {
         // (m + l) selection. merge parents and offspring and keep top m
         population.addAll(offspring);
-        population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder()));
-        population.subList(size, 2*size).clear();
+        population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder())); //reverse to have best first
+        population.subList(size, 2*size).clear(); //remove the worst half of the population
     }
     
     /* 

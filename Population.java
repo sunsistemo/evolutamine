@@ -26,11 +26,16 @@ public class Population
         offspring = new ArrayList<Individual>();
         sumFitness = 0.0;
         populate(rnd);
-    }
-    
+    }    
     
     /*
-     * Private (auxiliary) functions
+     * 
+     * EA COMPONENTS 
+     * 
+     */
+    
+    /*
+     * Initialisation
      */ 
     private void populate(Random rnd)
     {
@@ -46,43 +51,8 @@ public class Population
         }
     }
 
-    // Parent Selection: Fitness Proportional Selection
-    private void psFPS() 
-    {
-        for (Individual ind: population) {
-            ind.probability = ind.fitness / sumFitness;
-        }
-    }
-    
-    private double linearRankProbability(int rank)
-    {
-        double s = 2.0;
-        return ((2 - s) / size) + ((2*rank*(s-1)) / (size*(size-1)));
-    }
-    
-    // Parent Selection: Ranking Selection
-    private void psRS()
-    {
-        sortPopulation();
-        
-        int rank = population.size() - 1;
-        for (int i = 0; i < population.size(); i++) {
-            population.get(i).rank = rank-i;
-        }
-        
-        for (Individual ind: population) {
-            ind.probability = linearRankProbability(ind.rank);
-        }
-    }
-
-    // Sort the population based on fitness: high to low
-    private void sortPopulation()
-    {
-        population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder()));
-    }    
-
     /*
-     * EA Components
+     * Evaluation
      */ 
     public int calculateFitness(ContestEvaluation evaluation, String select)
     {
@@ -101,9 +71,12 @@ public class Population
             sumFitness += ind.fitness;
         }
         
-        return candidates.size();
+        return candidates.size(); // return number of evaluations performed
     }
-       
+    
+    /*
+     * Parent Selection
+     */ 
     public void selectParents()
     {
         matingPool.clear();
@@ -126,6 +99,38 @@ public class Population
         }
     }
     
+    // Parent Selection: Fitness Proportional Selection
+    private void psFPS() 
+    {
+        for (Individual ind: population) {
+            ind.probability = ind.fitness / sumFitness;
+        }
+    }
+    
+    // Parent Selection: Ranking Selection
+    private void psRS()
+    {
+        sortPopulation();
+        
+        int rank = population.size() - 1;
+        for (int i = 0; i < population.size(); i++) {
+            population.get(i).rank = rank-i;
+        }
+        
+        for (Individual ind: population) {
+            ind.probability = linearRankProbability(ind.rank);
+        }
+    }
+    
+    private double linearRankProbability(int rank)
+    {
+        double s = 2.0;
+        return ((2 - s) / size) + ((2*rank*(s-1)) / (size*(size-1)));
+    }
+
+    /*
+     * Recombination
+     */
     public void crossover()
     {
         offspring.clear();
@@ -156,6 +161,9 @@ public class Population
         }
     }
     
+    /*
+     * Mutation
+     */
     public void mutate(double rate)
     {
         for (Individual ind: population) {
@@ -166,7 +174,18 @@ public class Population
         }
     }
     
-    public void replacePopulationWithOffspring()
+    /*
+     * Survivor Selection
+     */
+    public void selectSurvivors()
+    {
+        // (m + l) selection. merge parents and offspring and keep top m
+        population.addAll(offspring);
+        sortPopulation();
+        population.subList(size, 2*size).clear(); //remove the worst half of the population
+    }
+    
+    private void replacePopulationWithOffspring()
     {
         // First version: Generational model. entire generation is replaced by offspring
         population.clear();
@@ -176,12 +195,16 @@ public class Population
         offspring.clear();
     }
     
-    public void selectSurvivors()
+    /* 
+     *
+     * AUXILIARY FUNCTIONS
+     *
+     */
+    
+    // Sort the population based on fitness: high to low
+    private void sortPopulation()
     {
-        // (m + l) selection. merge parents and offspring and keep top m
-        population.addAll(offspring);
-        sortPopulation();
-        population.subList(size, 2*size).clear(); //remove the worst half of the population
+        population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder()));
     }
     
     /* 

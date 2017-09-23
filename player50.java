@@ -66,8 +66,7 @@ public class player50 implements ContestSubmission
     public void run()
     {
         int evals = evaluation_limit;
-        //int evals = 2*populationSize;
-        
+        //int evals = 2*populationSize;        
         
         // init population
         population = new Population(populationSize, rnd);

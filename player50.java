@@ -10,9 +10,10 @@ public class player50 implements ContestSubmission
 {
     Random rnd;
     ContestEvaluation evaluation;
+    private final int POPULATION_SIZE = 100;
+    private final double MUTATION_RATE = 0.1;
     private int evaluation_limit;
     private Population population;
-    private final int populationSize = 100;
     String name;
 
     public player50()
@@ -57,7 +58,7 @@ public class player50 implements ContestSubmission
         
         
         // init population
-        population = new Population(populationSize, rnd);
+        population = new Population(POPULATION_SIZE, rnd);
         // calculate fitness
         evals -= population.calculateFitness(evaluation, "POPULATION");
         
@@ -67,6 +68,7 @@ public class player50 implements ContestSubmission
             
             // Apply crossover / mutation operators
             population.crossover();
+            population.mutate(MUTATION_RATE);
 
             // Check fitness of unknown function
             try {

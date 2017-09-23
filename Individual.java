@@ -1,3 +1,6 @@
+import java.util.Random;
+
+
 public class Individual
 {
     public double[] value;
@@ -17,8 +20,12 @@ public class Individual
         return this.fitness;
     }
     
-    public void mutate()
+    public void mutate(double rate)
     {
-        
+        Random rnd = new Random();
+        double r = rnd.nextDouble();
+        if (r < rate) {
+            // mutation 
+        }
     }
 }

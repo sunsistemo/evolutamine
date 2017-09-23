@@ -131,6 +131,16 @@ public class Population
         }
     }
     
+    public void mutate(double rate)
+    {
+        for (Individual ind: population) {
+            ind.mutate(rate);
+        }
+        for (Individual ind: offspring) {
+            ind.mutate(rate);
+        }
+    }
+    
     public void replacePopulationWithOffspring()
     {
         // First version: Generational model. entire generation is replaced by offspring

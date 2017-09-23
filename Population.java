@@ -97,26 +97,33 @@ public class Population
     public void crossover()
     {
         offspring.clear();
-        Individual[] parents = new Individual[numParents];
+        double[][] parents = new double[numParents][N];
         double[][] children = new double[numParents][N];
         Random rnd = new Random();
         
         for (int i = 0; i< size; i += numParents) {
             for (int j = 0; j < numParents; j++) {
                 int index = rnd.nextInt(matingPool.size());
-                parents[j] = matingPool.get(index);
+                parents[j] = matingPool.get(index).value;
                 matingPool.remove(index);
             }
-            
+            //~ System.out.println("");
+            //~ System.out.println("i: " + i + " Parent 0: " + Arrays.toString(parents[0]));
+            //~ System.out.println("i: " + i + " Parent 1: " + Arrays.toString(parents[0]));
             int parent = 0;
             int split = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
+            //~ System.out.println("i: " + i + " Split: " + split);
+            
             for (int j = 0; j < N; j++) {
                 if (j == split) {
                     parent = 1 - parent;
                 }
-                children[0][j] = parents[parent].value[j];
-                children[1][j] = parents[1-parent].value[j];
+                children[0][j] = parents[parent][j];
+                children[1][j] = parents[1-parent][j];
             }
+            
+            //~ System.out.println("i: " + i + " Child 0: " + Arrays.toString(children[0]));
+            //~ System.out.println("i: " + i + " Child 1: " + Arrays.toString(children[1]));
             
             for (int j = 0; j < numParents; j++) {
                 offspring.add(new Individual(children[j]));
@@ -136,21 +143,10 @@ public class Population
     
     public void selectSurvivors()
     {
-        replacePopulationWithOffspring();
-        /*
         // (m + l) selection. merge parents and offspring and keep top m
-        System.out.println("Size1: " + population.size());
-        print();
         population.addAll(offspring);
-        System.out.println("Size2: " + population.size());
-        print();
         population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder()));
-        System.out.println("Size3: " + population.size());
-        print();
         population.subList(size, 2*size).clear();
-        System.out.println("Size4: " + population.size());
-        print();
-        */
     }
     
     /* 

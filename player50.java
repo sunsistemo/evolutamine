@@ -12,7 +12,7 @@ public class player50 implements ContestSubmission
     ContestEvaluation evaluation;
     private int evaluation_limit;
     private Population population;
-    private final int populationSize = 100;
+    private final int populationSize = 10;
     String name;
 
     public player50()
@@ -53,7 +53,9 @@ public class player50 implements ContestSubmission
     public void run()
     {
         int evals = evaluation_limit;
-
+        //int evals = 30;
+        
+        
         // init population
         population = new Population(populationSize, rnd);
         // calculate fitness

@@ -21,7 +21,7 @@ public class player50 implements ContestSubmission
     {
         name = "evolutamine";
         rnd = new Random();
-        populationSize = 100;
+        populationSize = 50;
     }
 
     public void setSeed(long seed)
@@ -66,7 +66,7 @@ public class player50 implements ContestSubmission
     public void run()
     {
         int evals = evaluation_limit;
-        //int evals = 30;
+        //int evals = 2*populationSize;
         
         
         // init population

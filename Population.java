@@ -46,23 +46,40 @@ public class Population
         }
     }
 
-    private void psFPS()
+    // Parent Selection: Fitness Proportional Selection
+    private void psFPS() 
     {
-        // Stochastic Universal Sampling (SUS) algorithm p.84
-        Random rnd = new Random();
-        double r = (rnd.nextDouble() / ((double) size));
-        int i = 0;
-        double cumProbability = 0.0;
-        while (matingPool.size() < size) {
-            cumProbability += population.get(i).probability;
-                        
-            while (r <= cumProbability) {
-                matingPool.add(population.get(i));
-                r += 1 / ((double) size);
-            }
-            i++;
+        for (Individual ind: population) {
+            ind.probability = ind.fitness / sumFitness;
         }
     }
+    
+    private double linearRankProbability(int rank)
+    {
+        double s = 2.0;
+        return ((2 - s) / size) + ((2*rank*(s-1)) / (size*(size-1)));
+    }
+    
+    // Parent Selection: Ranking Selection
+    private void psRS()
+    {
+        sortPopulation();
+        
+        int rank = population.size() - 1;
+        for (int i = 0; i < population.size(); i++) {
+            population.get(i).rank = rank-i;
+        }
+        
+        for (Individual ind: population) {
+            ind.probability = linearRankProbability(ind.rank);
+        }
+    }
+
+    // Sort the population based on fitness: high to low
+    private void sortPopulation()
+    {
+        population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder()));
+    }    
 
     /*
      * EA Components
@@ -83,9 +100,6 @@ public class Population
             ind.fitness = (double) evaluation.evaluate(ind.value);
             sumFitness += ind.fitness;
         }
-        for (Individual ind: candidates) {
-            ind.probability = ind.fitness / sumFitness;
-        }
         
         return candidates.size();
     }
@@ -93,7 +107,23 @@ public class Population
     public void selectParents()
     {
         matingPool.clear();
-        psFPS();        
+        //psFPS();
+        psRS();
+        
+        // Stochastic Universal Sampling (SUS) algorithm p.84
+        Random rnd = new Random();
+        double r = (rnd.nextDouble() / ((double) size));
+        int i = 0;
+        double cumProbability = 0.0;
+        while (matingPool.size() < size) {
+            cumProbability += population.get(i).probability;
+                        
+            while (r <= cumProbability) {
+                matingPool.add(population.get(i));
+                r += 1 / ((double) size);
+            }
+            i++;
+        }
     }
     
     public void crossover()
@@ -150,7 +180,7 @@ public class Population
     {
         // (m + l) selection. merge parents and offspring and keep top m
         population.addAll(offspring);
-        population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder())); //reverse to have best first
+        sortPopulation();
         population.subList(size, 2*size).clear(); //remove the worst half of the population
     }
     

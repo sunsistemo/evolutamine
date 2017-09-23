@@ -24,10 +24,20 @@ public class Individual
     
     public void mutate(double rate)
     {
-        Random rnd = new Random();
-        double r = rnd.nextDouble();
-        if (r < rate) {
-            // mutation 
+        uniformMutation(rate);
+    }
+    
+    private void uniformMutation(double rate)
+    {
+        Random rnd = new Random();        
+        for (int i = 0; i < value.length; i++) {
+            double r = rnd.nextDouble();
+            if (r < rate) {
+                value[i] = rnd.nextDouble() * 5.0;
+                if (rnd.nextBoolean()) {
+                    value[i] *= -1;
+                }
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ public class Population
     private List<Individual> offspring;
     private final int N = 10;
     private final int numParents = 2;
+    private final double MUTATION_RATE = 0.1;
     private double sumFitness;
     
     
@@ -164,13 +165,13 @@ public class Population
     /*
      * Mutation
      */
-    public void mutate(double rate)
+    public void mutate()
     {
         for (Individual ind: population) {
-            ind.mutate(rate);
+            ind.mutate(MUTATION_RATE);
         }
         for (Individual ind: offspring) {
-            ind.mutate(rate);
+            ind.mutate(MUTATION_RATE);
         }
     }
     

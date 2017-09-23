@@ -11,7 +11,6 @@ public class player50 implements ContestSubmission
 {
     Random rnd;
     ContestEvaluation evaluation;
-    private final double MUTATION_RATE = 0.1;
     private int evaluation_limit;
     private int populationSize;
     private Population population;
@@ -21,7 +20,7 @@ public class player50 implements ContestSubmission
     {
         name = "evolutamine";
         rnd = new Random();
-        populationSize = 50;
+        populationSize = 100;
     }
 
     public void setSeed(long seed)
@@ -66,7 +65,7 @@ public class player50 implements ContestSubmission
     public void run()
     {
         int evals = evaluation_limit;
-        //int evals = 2*populationSize;        
+        //~ int evals = 2*populationSize;
         
         // init population
         population = new Population(populationSize, rnd);
@@ -79,7 +78,7 @@ public class player50 implements ContestSubmission
             
             // Apply crossover / mutation operators
             population.crossover();
-            population.mutate(MUTATION_RATE);
+            population.mutate();
 
             // Check fitness of unknown function
             try {

@@ -46,6 +46,23 @@ public class Population
         }
     }
 
+    private void psFPS()
+    {
+        // Stochastic Universal Sampling (SUS) algorithm p.84
+        Random rnd = new Random();
+        double r = (rnd.nextDouble() / ((double) size));
+        int i = 0;
+        double cumProbability = 0.0;
+        while (matingPool.size() < size) {
+            cumProbability += population.get(i).probability;
+                        
+            while (r <= cumProbability) {
+                matingPool.add(population.get(i));
+                r += 1 / ((double) size);
+            }
+            i++;
+        }
+    }
 
     /*
      * EA Components
@@ -75,23 +92,8 @@ public class Population
        
     public void selectParents()
     {
-        // First version: Generational model
         matingPool.clear();
-        
-        // Stochastic Universal Sampling (SUS) algorithm p.84
-        Random rnd = new Random();
-        double r = (rnd.nextDouble() / ((double) size));
-        int i = 0;
-        double cumProbability = 0.0;
-        while (matingPool.size() < size) {
-            cumProbability += population.get(i).probability;
-                        
-            while (r <= cumProbability) {
-                matingPool.add(population.get(i));
-                r += 1 / ((double) size);
-            }
-            i++;
-        }
+        psFPS();        
     }
     
     public void crossover()
@@ -107,13 +109,9 @@ public class Population
                 parents[j] = matingPool.get(index).value;
                 matingPool.remove(index);
             }
-            //~ System.out.println("");
-            //~ System.out.println("i: " + i + " Parent 0: " + Arrays.toString(parents[0]));
-            //~ System.out.println("i: " + i + " Parent 1: " + Arrays.toString(parents[0]));
+            
             int parent = 0;
             int split = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
-            //~ System.out.println("i: " + i + " Split: " + split);
-            
             for (int j = 0; j < N; j++) {
                 if (j == split) {
                     parent = 1 - parent;
@@ -121,9 +119,6 @@ public class Population
                 children[0][j] = parents[parent][j];
                 children[1][j] = parents[1-parent][j];
             }
-            
-            //~ System.out.println("i: " + i + " Child 0: " + Arrays.toString(children[0]));
-            //~ System.out.println("i: " + i + " Child 1: " + Arrays.toString(children[1]));
             
             for (int j = 0; j < numParents; j++) {
                 offspring.add(new Individual(children[j]));

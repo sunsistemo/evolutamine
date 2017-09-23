@@ -12,7 +12,7 @@ public class player50 implements ContestSubmission
     ContestEvaluation evaluation;
     private int evaluation_limit;
     private Population population;
-    private final int populationSize = 10;
+    private final int populationSize = 100;
     String name;
 
     public player50()

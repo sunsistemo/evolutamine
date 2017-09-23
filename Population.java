@@ -80,18 +80,16 @@ public class Population
         
         // Stochastic Universal Sampling (SUS) algorithm p.84
         Random rnd = new Random();
-        double r = (rnd.nextDouble() / ((double) size));        
+        double r = (rnd.nextDouble() / ((double) size));
         int i = 0;
         double cumProbability = 0.0;
         while (matingPool.size() < size) {
-            Individual candidate = population.get(i);
-            cumProbability += candidate.probability;
-            
+            cumProbability += population.get(i).probability;
+                        
             while (r <= cumProbability) {
-                matingPool.add(candidate);
+                matingPool.add(population.get(i));
                 r += 1 / ((double) size);
             }
-            
             i++;
         }
     }

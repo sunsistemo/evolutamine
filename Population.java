@@ -16,6 +16,7 @@ public class Population
     private final int N = 10;
     private final int numParents = 2;
     private final double MUTATION_RATE = 0.1;
+    private final double MUTATION_STEP_SIZE = 0.05;
     private double sumFitness;
     
     
@@ -168,10 +169,10 @@ public class Population
     public void mutate()
     {
         for (Individual ind: population) {
-            ind.mutate(MUTATION_RATE);
+            ind.mutate(MUTATION_RATE, MUTATION_STEP_SIZE);
         }
         for (Individual ind: offspring) {
-            ind.mutate(MUTATION_RATE);
+            ind.mutate(MUTATION_RATE, MUTATION_STEP_SIZE);
         }
     }
     

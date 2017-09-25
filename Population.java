@@ -171,7 +171,7 @@ public class Population
                 matingPool.remove(index);
             }
             
-            children = discreteRecombination(parents);
+            children = singleArithmeticRecombination(parents);
             
             for (int j = 0; j < numParents; j++) {
                 offspring.add(new Individual(children[j]));
@@ -194,6 +194,46 @@ public class Population
         return children;
     }
     
+    private double[][] simpleArithmeticRecombination(double[][] parents)
+    {
+        double[][] children = new double[numParents][N];
+        int parent = 0;
+        int k = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
+        double alpha = rnd.nextDouble();
+        
+        for (int i = 0; i < numParents; i++) {
+            for (int j = 0; j < N; j++) {
+                if (j < k) {
+                    children[i][j] = parents[parent][j];
+                } else {
+                    children[i][j] = alpha * parents[1-parent][j] + (1 - alpha) * parents[parent][j];
+                }
+            }
+            parent = 1 - parent;
+        }
+        
+        return children;
+    }
+    
+    private double[][] singleArithmeticRecombination(double[][] parents)
+    {
+        double[][] children = new double[numParents][N];
+        int k = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
+        double alpha = rnd.nextDouble();
+        
+        for (int j = 0; j < N; j++) {
+            if (j == (k-1)) {
+                children[0][j] = alpha * parents[1][j] + (1 - alpha) * parents[0][j];
+                children[1][j] = alpha * parents[0][j] + (1 - alpha) * parents[1][j];
+            } else {
+                children[0][j] = parents[0][j];
+                children[1][j] = parents[1][j];
+            }
+        }
+        
+        return children;
+    }
+
     /*
      * Mutation
      */

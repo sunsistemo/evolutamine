@@ -21,7 +21,7 @@ RTARGS=-submission=$(PLAYER) -evaluation=$(FUNCTION) -seed=$(SEED)
 
 FUNC=BentCigarFunction
 FUNCTION=$(subst .class,,$(FUNC))
-SEED=1
+SEED=$$RANDOM
 
 FUNCTIONS=BentCigarFunction KatsuuraEvaluation SchaffersEvaluation
 

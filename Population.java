@@ -1,9 +1,10 @@
 import java.lang.Math;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.Comparator;
 
 import org.vu.contest.ContestEvaluation;
 
@@ -291,7 +292,13 @@ public class Population
     // Sort the population based on fitness: high to low
     private void sortPopulation()
     {
-        population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder()));
+        /* 
+         * commented code gives java.lang.BootstrapMethodError: call site initialization exception
+         * population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder()));
+         * for now, don't use lambda expressions
+         */ 
+        
+        population.sort(Comparator.comparingDouble(Individual::fitness).reversed());
     }
     
     /* 

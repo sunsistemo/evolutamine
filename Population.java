@@ -1,3 +1,4 @@
+import java.lang.Math;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +84,8 @@ public class Population
     {
         matingPool.clear();
         //psFPS();
-        psRS();
+        psRS("linear");
+        //~ psRS("exponential");
         
         // Stochastic Universal Sampling (SUS) algorithm p.84
         Random rnd = new Random();
@@ -110,7 +112,7 @@ public class Population
     }
     
     // Parent Selection: Ranking Selection
-    private void psRS()
+    private void psRS(String ranking)
     {
         sortPopulation();
         
@@ -119,17 +121,36 @@ public class Population
             population.get(i).rank = rank-i;
         }
         
-        for (Individual ind: population) {
-            ind.probability = linearRankProbability(ind.rank);
+        if (ranking.equals("linear")) {
+            for (Individual ind: population) {
+                ind.probability = linearRankProbability(ind.rank);
+            }            
+        } else if (ranking.equals("exponential")) {
+            double normalisation = 0.0;            
+            for (Individual ind: population) {
+                double p = exponentialRankProbability(ind.rank);
+                ind.probability = p;
+                normalisation += p;
+            }
+            for (Individual ind: population) {
+                ind.probability /= normalisation;
+            }
         }
     }
     
+    // Parent Selection: Ranking Selection Probability (Page 82)
     private double linearRankProbability(int rank)
     {
         double s = 2.0;
         return ((2 - s) / size) + ((2*rank*(s-1)) / (size*(size-1)));
     }
-
+    
+    // Parent Selection: Ranking Selection Probability (Page 82)
+    private double exponentialRankProbability(int rank)
+    {
+        return (1 - Math.exp(-1 * rank));
+    }
+    
     /*
      * Recombination
      */

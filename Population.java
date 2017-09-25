@@ -14,11 +14,12 @@ public class Population
     private List<Individual> population;
     private List<Individual> matingPool;
     private List<Individual> offspring;
-    private final int N = 10;
-    private final int numParents = 2;
+    private final int N = 10;    
     private final double MUTATION_RATE = 0.1;
     private final double MUTATION_STEP_SIZE = 0.05;
+    private final int numParents;
     private double sumFitness;
+    private Random rnd;
     
     
     public Population(int size, Random rnd)
@@ -27,7 +28,9 @@ public class Population
         population = new ArrayList<Individual>();
         matingPool = new ArrayList<Individual>();
         offspring = new ArrayList<Individual>();
+        numParents = 2;
         sumFitness = 0.0;
+        this.rnd = rnd;
         populate(rnd);
     }    
     
@@ -158,30 +161,37 @@ public class Population
     {
         offspring.clear();
         double[][] parents = new double[numParents][N];
-        double[][] children = new double[numParents][N];
+        double[][] children;
         Random rnd = new Random();
         
-        for (int i = 0; i< size; i += numParents) {
+        for (int i = 0; i < size; i += numParents) {
             for (int j = 0; j < numParents; j++) {
                 int index = rnd.nextInt(matingPool.size());
                 parents[j] = matingPool.get(index).value;
                 matingPool.remove(index);
             }
             
-            int parent = 0;
-            int split = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
-            for (int j = 0; j < N; j++) {
-                if (j == split) {
-                    parent = 1 - parent;
-                }
-                children[0][j] = parents[parent][j];
-                children[1][j] = parents[1-parent][j];
-            }
+            children = discreteRecombination(parents);
             
             for (int j = 0; j < numParents; j++) {
                 offspring.add(new Individual(children[j]));
             }
         }
+    }
+    
+    private double[][] discreteRecombination(double[][] parents)
+    {
+        double[][] children = new double[numParents][N];
+        int parent = 0;
+        int split = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
+        for (int j = 0; j < N; j++) {
+            if (j == split) {
+                parent = 1 - parent;
+            }
+            children[0][j] = parents[parent][j];
+            children[1][j] = parents[1-parent][j];
+        }
+        return children;
     }
     
     /*

@@ -6,7 +6,7 @@ public class Individual
 {
     public double[] value;
     public double fitness;
-    public double sigma;
+    public double[] sigma;
     public double probability;
     public int rank;
     Random rnd;
@@ -19,8 +19,12 @@ public class Individual
         fitness = 0.0;
         probability = 0.0;
         rank = 0;
-        sigma = 0.05;
+        sigma = new double[value.length];
         rnd = new Random();
+
+        for (int i = 0; i < value.length; i++) {
+            sigma[i] = 0.05;
+        }
     }
 
     public double fitness()
@@ -60,11 +64,26 @@ public class Individual
         double tau = 0.9;
         double epsilon = 0.025;
         double gamma = tau * rnd.nextGaussian();
-        sigma *= Math.exp(gamma);
-        sigma = Math.max(sigma, epsilon);
+        sigma[0] *= Math.exp(gamma);
+        sigma[0] = Math.max(sigma[0], epsilon);
 
         for (int i = 0; i < value.length; i++) {
-            value[i] = boundedAdd(value[i], sigma * rnd.nextGaussian());
+            value[i] = boundedAdd(value[i], sigma[0] * rnd.nextGaussian());
+        }
+    }
+
+    private void uncorrelatedMutationWithNStepSizes()
+    {
+        double tau = 0.05;    // local learning rate
+        double tau2 = 0.9;   // global learning rate
+        double epsilon = 0.001;
+        double gamma = tau2 * rnd.nextGaussian();
+
+        for (int i = 0; i < value.length; i++) {
+            double g = rnd.nextGaussian();
+            sigma[i] *= Math.exp(gamma + tau * g);
+            sigma[i] = Math.max(sigma[i], epsilon);
+            value[i] = boundedAdd(value[i], sigma[i] * g);
         }
     }
 

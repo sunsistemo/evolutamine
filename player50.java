@@ -13,6 +13,7 @@ public class player50 implements ContestSubmission
     ContestEvaluation evaluation;
     private int evaluation_limit;
     private int populationSize;
+    private int cycle;
     private Population population;
     String name;
 
@@ -71,18 +72,19 @@ public class player50 implements ContestSubmission
         population = new Population(populationSize, rnd);
         // calculate fitness
         evals -= population.calculateFitness(evaluation, "POPULATION");
-        
+
+        cycle = 0;
         while (evals > 0) {
             // Select parents
             population.selectParents();
-            
+
             // Apply crossover / mutation operators
             population.crossover();
             population.mutate();
 
             // Check fitness of unknown function
             try {
-                evals -= population.calculateFitness(evaluation, "OFFSPRING");                
+                evals -= population.calculateFitness(evaluation, "OFFSPRING");
             } catch (NullPointerException e) {
                 System.out.println("\033[1mEvaluation limit reached!\033[0m");
                 break;
@@ -90,6 +92,9 @@ public class player50 implements ContestSubmission
 
             // Select survivors
             population.selectSurvivors();
+
+            cycle++;
         }
+        System.out.println("Evolutionary Cycles: " + cycle);
     }
 }

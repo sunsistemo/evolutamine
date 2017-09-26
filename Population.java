@@ -12,10 +12,12 @@ import org.vu.contest.ContestEvaluation;
 public class Population
 {
     private int size;
+    private double offspringRatio;
+    private int offspringSize;
     private List<Individual> population;
     private List<Individual> matingPool;
     private List<Individual> offspring;
-    private final int N = 10;    
+    private final int N = 10;
     private final double MUTATION_RATE = 0.1;
     private final double MUTATION_STEP_SIZE = 0.05;
     private final int numParents;
@@ -31,9 +33,11 @@ public class Population
         offspring = new ArrayList<Individual>();
         numParents = 2;
         sumFitness = 0.0;
+        offspringRatio = 1.0;
+        offspringSize = (int) (size * offspringRatio);
         this.rnd = rnd;
         populate(rnd);
-    }    
+    }
     
     /*
      * 
@@ -92,15 +96,15 @@ public class Population
         //~ psRS("exponential");
         
         // Stochastic Universal Sampling (SUS) algorithm p.84
-        double r = (rnd.nextDouble() / ((double) size));
+        double r = (rnd.nextDouble() / ((double) offspringSize));
         int i = 0;
         double cumProbability = 0.0;
-        while (matingPool.size() < size) {
+        while (matingPool.size() < offspringSize) {
             cumProbability += population.get(i).probability;
-                        
+
             while (r <= cumProbability) {
                 matingPool.add(population.get(i));
-                r += 1 / ((double) size);
+                r += 1 / ((double) offspringSize);
             }
             i++;
         }
@@ -164,7 +168,7 @@ public class Population
         double[][] children;
         Random rnd = new Random();
         
-        for (int i = 0; i < size; i += numParents) {
+        for (int i = 0; i < offspringSize; i += numParents) {
             for (int j = 0; j < numParents; j++) {
                 int index = rnd.nextInt(matingPool.size());
                 parents[j] = matingPool.get(index).value;
@@ -266,10 +270,10 @@ public class Population
      */
     public void selectSurvivors()
     {
-        // (m + l) selection. merge parents and offspring and keep top m
+        // (μ + λ) selection. merge parents and offspring and keep top μ
         population.addAll(offspring);
         sortPopulation();
-        population.subList(size, 2*size).clear(); //remove the worst half of the population
+        population.subList(size, size + offspringSize).clear(); //remove the worst half of the population
     }
     
     private void replacePopulationWithOffspring()

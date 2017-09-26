@@ -18,8 +18,6 @@ public class Population
     private List<Individual> matingPool;
     private List<Individual> offspring;
     private final int N = 10;
-    private final double MUTATION_RATE = 0.1;
-    private final double MUTATION_STEP_SIZE = 0.05;
     private final int numParents;
     private double sumFitness;
     private Random rnd;
@@ -280,10 +278,10 @@ public class Population
     public void mutate()
     {
         for (Individual ind: population) {
-            ind.mutate(MUTATION_RATE, MUTATION_STEP_SIZE);
+            ind.mutate();
         }
         for (Individual ind: offspring) {
-            ind.mutate(MUTATION_RATE, MUTATION_STEP_SIZE);
+            ind.mutate();
         }
     }
     

@@ -9,10 +9,10 @@ public class Individual
     public double[] sigma;
     public double probability;
     public int rank;
-    Random rnd;
     private final double UB = 5.0;
     private final double LB = UB * -1;
-
+    Random rnd;
+    
     public Individual(double[] value)
     {
         this.value = value;
@@ -23,7 +23,7 @@ public class Individual
         rnd = new Random();
 
         for (int i = 0; i < value.length; i++) {
-            sigma[i] = 0.05;
+            sigma[i] = Options.MUTATION_STEP_SIZE;
         }
     }
 
@@ -32,17 +32,17 @@ public class Individual
         return this.fitness;
     }
 
-    public void mutate(double rate, double stepSize)
+    public void mutate()
     {
-        nonUniformMutation(stepSize);
+        nonUniformMutation();
     }
 
-    private void uniformMutation(double rate)
+    private void uniformMutation()
     {
         for (int i = 0; i < value.length; i++) {
             double r = rnd.nextDouble();
-            if (r < rate) {
-                value[i] = rnd.nextDouble() * 5.0;
+            if (r < Options.MUTATION_RATE) {
+                value[i] = rnd.nextDouble() * UB;
                 if (rnd.nextBoolean()) {
                     value[i] *= -1;
                 }
@@ -51,10 +51,10 @@ public class Individual
     }
     
     // Page 57 of the book. Mutation probability per gene is 1, but sd controls to which extent
-    private void nonUniformMutation(double sd)
+    private void nonUniformMutation()
     {
         for (int i = 0; i < value.length; i++) {
-            double h = rnd.nextGaussian() * sd;
+            double h = rnd.nextGaussian() * sigma[0];
             value[i] = boundedAdd(value[i], h);
         }
     }

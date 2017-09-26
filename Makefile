@@ -44,7 +44,9 @@ runall: $(SUBMISSION)
 	@for f in $(FUNCTIONS) ; do \
 		echo $$f "seed="$(SEED) ; \
 		$(JVM) $(DJAVA) $(JARRFLAGS) $(RTARGS:$(FUNCTION)=$$f) ; \
+		printf "\n" ; \
     done
+	@printf "Complete!\n"
 
 clean:
 	rm -rf $(CLASSES) $(SUBMISSION) tmp

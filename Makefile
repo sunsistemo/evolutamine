@@ -34,8 +34,7 @@ $(SUBMISSION): $(CLASSES)
 $(CLASSES): $(SOURCES)
 	$(JC) $(JCFLAGS) $(SOURCES)	
 
-.PHONY: all run runall clean test
-
+.PHONY: all run runall clean clean-build
 all: $(SUBMISSION)
 
 run: $(SUBMISSION)
@@ -52,3 +51,5 @@ runall: $(SUBMISSION)
 
 clean:
 	rm -rf $(CLASSES) $(INNERCLASSES) $(SUBMISSION) tmp
+
+clean-build: clean $(SUBMISSION)

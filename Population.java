@@ -92,7 +92,6 @@ public class Population
         //~ psRS("exponential");
         
         // Stochastic Universal Sampling (SUS) algorithm p.84
-        Random rnd = new Random();
         double r = (rnd.nextDouble() / ((double) size));
         int i = 0;
         double cumProbability = 0.0;

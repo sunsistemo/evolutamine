@@ -2,6 +2,7 @@
 # jar cmf MainClass.txt submission.jar player1.class <OTHER_CLASS_FILES>
 # java -jar testrun.jar -submission=player1 -evaluation=BentCigarFunction -seed=1
 
+SHELL=/bin/bash
 JC=javac
 JCFLAGS=-cp contest.jar
 PLAYER=player50
@@ -44,6 +45,6 @@ runall: $(SUBMISSION)
 		echo $$f "seed="$(SEED) ; \
 		$(JVM) $(DJAVA) $(JARRFLAGS) $(RTARGS:$(FUNCTION)=$$f) ; \
     done
-			
+
 clean:
 	rm -rf $(CLASSES) $(SUBMISSION) tmp

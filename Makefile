@@ -9,6 +9,8 @@ PLAYER=player50
 
 SOURCES=$(PLAYER).java $(filter-out $(PLAYER).java, $(wildcard *.java))
 CLASSES=$(SOURCES:.java=.class)
+#OPTIONS=$(subst $$,\$$,$(wildcard Options$$*.class))
+INNERCLASSES=$(subst $$,\$$,Options$$Crossover.class Options$$Mutation.class Options$$Population.class)
 
 JAR=jar
 JARCFLAGS=cmf
@@ -27,12 +29,12 @@ SEED=$$RANDOM
 FUNCTIONS=BentCigarFunction KatsuuraEvaluation SchaffersEvaluation
 
 $(SUBMISSION): $(CLASSES)
-	$(JAR) $(JARCFLAGS) $(MANIFEST) $(SUBMISSION) $(CLASSES)
+	$(JAR) $(JARCFLAGS) $(MANIFEST) $@ $(CLASSES) $(INNERCLASSES)
 
 $(CLASSES): $(SOURCES)
-	$(JC) $(JCFLAGS) $(SOURCES)
+	$(JC) $(JCFLAGS) $(SOURCES)	
 
-.PHONY: all run runall clean
+.PHONY: all run runall clean test
 
 all: $(SUBMISSION)
 
@@ -49,4 +51,4 @@ runall: $(SUBMISSION)
 	@printf "Complete!\n"
 
 clean:
-	rm -rf $(CLASSES) $(SUBMISSION) tmp
+	rm -rf $(CLASSES) $(INNERCLASSES) $(SUBMISSION) tmp

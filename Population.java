@@ -174,9 +174,9 @@ public class Population
                 parents[j] = matingPool.get(index).value;
                 matingPool.remove(index);
             }
-            
+
             children = wholeArithmeticRecombination(parents);
-            
+
             for (int j = 0; j < numParents; j++) {
                 offspring.add(new Individual(children[j]));
             }
@@ -237,21 +237,43 @@ public class Population
         
         return children;
     }
-    
+
     private double[][] wholeArithmeticRecombination(double[][] parents)
     {
         double[][] children = new double[numParents][N];
-        int k = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
         double alpha = rnd.nextDouble();
-        
+
         for (int j = 0; j < N; j++) {
             children[0][j] = alpha * parents[0][j] + (1 - alpha) * parents[1][j];
-            children[1][j] = alpha * parents[1][j] + (1 - alpha) * parents[0][j];            
-        }                
-            
+            children[1][j] = alpha * parents[1][j] + (1 - alpha) * parents[0][j];
+        }
+
         return children;
     }
-    
+
+    private double[][] blendRecombination(double[][] parents)
+    {
+        // Blend Crossover p. 67
+        double[][] children = new double[numParents][N];
+        double alpha = 0.5;
+
+        for (int p = 0; p < numParents; p++) {
+            double u = rnd.nextDouble();
+            double gamma = (1 - 2 * alpha) * u - alpha;
+
+            for (int j = 0; j < N; j++) {
+                children[p][j] = (1 - gamma) * parents[0][j] + gamma * parents[1][j];
+
+                if (children[p][j] > 5) {
+                    children[p][j] = 5;
+                } else if (children[p][j] < -5) {
+                    children[p][j] = -5;
+                }
+            }
+        }
+        return children;
+    }
+
     /*
      * Mutation
      */

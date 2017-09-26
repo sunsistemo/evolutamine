@@ -21,8 +21,8 @@ public class Population
     private final int numParents;
     private double sumFitness;
     private Random rnd;
-    
-    
+
+
     public Population(int size, Random rnd)
     {
         this.size = size;
@@ -36,16 +36,16 @@ public class Population
         this.rnd = rnd;
         populate(rnd);
     }
-    
+
     /*
-     * 
-     * EA COMPONENTS 
-     * 
+     *
+     * EA COMPONENTS
+     *
      */
-    
+
     /*
      * Initialisation
-     */ 
+     */
     private void populate(Random rnd)
     {
         for (int i = 0; i < size; i++) {
@@ -62,7 +62,7 @@ public class Population
 
     /*
      * Evaluation
-     */ 
+     */
     public int calculateFitness(ContestEvaluation evaluation, String select)
     {
         List<Individual> candidates;
@@ -73,26 +73,26 @@ public class Population
         } else {
             candidates = new ArrayList<Individual>();
         }
-        
+
         sumFitness = 0.0;
         for (Individual ind: candidates) {
             ind.fitness = (double) evaluation.evaluate(ind.value);
             sumFitness += ind.fitness;
         }
-        
+
         return candidates.size(); // return number of evaluations performed
     }
-    
+
     /*
      * Parent Selection
-     */ 
+     */
     public void selectParents()
     {
         matingPool.clear();
         //psFPS();
         psRS("linear");
         //~ psRS("exponential");
-        
+
         // Stochastic Universal Sampling (SUS) algorithm p.84
         double r = (rnd.nextDouble() / ((double) offspringSize));
         int i = 0;
@@ -107,31 +107,31 @@ public class Population
             i++;
         }
     }
-    
+
     // Parent Selection: Fitness Proportional Selection
-    private void psFPS() 
+    private void psFPS()
     {
         for (Individual ind: population) {
             ind.probability = ind.fitness / sumFitness;
         }
     }
-    
+
     // Parent Selection: Ranking Selection
     private void psRS(String ranking)
     {
         sortPopulation();
-        
+
         int rank = population.size() - 1;
         for (int i = 0; i < population.size(); i++) {
             population.get(i).rank = rank-i;
         }
-        
+
         if (ranking.equals("linear")) {
             for (Individual ind: population) {
                 ind.probability = linearRankProbability(ind.rank);
-            }            
+            }
         } else if (ranking.equals("exponential")) {
-            double normalisation = 0.0;            
+            double normalisation = 0.0;
             for (Individual ind: population) {
                 double p = exponentialRankProbability(ind.rank);
                 ind.probability = p;
@@ -142,20 +142,20 @@ public class Population
             }
         }
     }
-    
+
     // Parent Selection: Ranking Selection Probability (Page 82)
     private double linearRankProbability(int rank)
     {
         double s = 2.0;
         return ((2 - s) / size) + ((2*rank*(s-1)) / (size*(size-1)));
     }
-    
+
     // Parent Selection: Ranking Selection Probability (Page 82)
     private double exponentialRankProbability(int rank)
     {
         return (1 - Math.exp(-1 * rank));
     }
-    
+
     /*
      * Recombination
      */
@@ -165,7 +165,7 @@ public class Population
         double[][] parents = new double[numParents][N];
         double[][] children;
         Random rnd = new Random();
-        
+
         for (int i = 0; i < offspringSize; i += numParents) {
             for (int j = 0; j < numParents; j++) {
                 int index = rnd.nextInt(matingPool.size());
@@ -180,7 +180,7 @@ public class Population
             }
         }
     }
-    
+
     private double[][] discreteRecombination(double[][] parents)
     {
         double[][] children = new double[numParents][N];
@@ -195,14 +195,14 @@ public class Population
         }
         return children;
     }
-    
+
     private double[][] simpleArithmeticRecombination(double[][] parents)
     {
         double[][] children = new double[numParents][N];
         int parent = 0;
         int k = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
         double alpha = rnd.nextDouble();
-        
+
         for (int i = 0; i < numParents; i++) {
             for (int j = 0; j < N; j++) {
                 if (j < k) {
@@ -213,16 +213,16 @@ public class Population
             }
             parent = 1 - parent;
         }
-        
+
         return children;
     }
-    
+
     private double[][] singleArithmeticRecombination(double[][] parents)
     {
         double[][] children = new double[numParents][N];
         int k = rnd.nextInt(N-2) + 1; // split should be in interval [1,N-1]
         double alpha = rnd.nextDouble();
-        
+
         for (int j = 0; j < N; j++) {
             if (j == (k-1)) {
                 children[0][j] = alpha * parents[1][j] + (1 - alpha) * parents[0][j];
@@ -232,7 +232,7 @@ public class Population
                 children[1][j] = parents[1][j];
             }
         }
-        
+
         return children;
     }
 
@@ -278,13 +278,13 @@ public class Population
     public void mutate()
     {
         for (Individual ind: population) {
-            ind.mutate();
+            ind.mutate(Options.Mutation.UNCORRELATED_N);
         }
         for (Individual ind: offspring) {
-            ind.mutate();
+            ind.mutate(Options.Mutation.UNCORRELATED_N);
         }
     }
-    
+
     /*
      * Survivor Selection
      */
@@ -295,7 +295,7 @@ public class Population
         sortPopulation();
         population.subList(size, size + offspringSize).clear(); //remove the worst half of the population
     }
-    
+
     private void replacePopulationWithOffspring()
     {
         // First version: Generational model. entire generation is replaced by offspring
@@ -305,35 +305,35 @@ public class Population
         }
         offspring.clear();
     }
-    
-    /* 
+
+    /*
      *
      * AUXILIARY FUNCTIONS
      *
      */
-    
+
     // Sort the population based on fitness: high to low
     private void sortPopulation()
     {
-        /* 
+        /*
          * commented code gives java.lang.BootstrapMethodError: call site initialization exception
          * population.sort(Comparator.comparing(Individual::fitness, Comparator.reverseOrder()));
          * for now, don't use lambda expressions
-         */ 
-        
+         */
+
         population.sort(Comparator.comparingDouble(Individual::fitness).reversed());
     }
-    
-    /* 
+
+    /*
      * Print functions
      */
     public void print()
     {
         for (int i = 0; i < size; i++) {
             System.out.println(Arrays.toString(population.get(i).value));
-        } 
+        }
     }
-    
+
     public void printFitness()
     {
         int i = 0;

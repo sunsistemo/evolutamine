@@ -12,7 +12,7 @@ public class Individual
     private final double UB = 5.0;
     private final double LB = UB * -1;
     Random rnd;
-    
+
     public Individual(double[] value)
     {
         this.value = value;
@@ -32,8 +32,25 @@ public class Individual
         return this.fitness;
     }
 
-    public void mutate()
+    public void mutate(Options.Mutation method)
     {
+        //switch(method) {
+            //case UNIFORM:
+                //uniformMutation();
+                //break;
+            //case NON_UNIFORM:
+                //nonUniformMutation();
+                //break;
+            //case UNCORRELATED:
+                //uncorrelatedMutationWithOneStepSize();
+                //break;
+            //case UNCORRELATED_N:
+                //uncorrelatedMutationWithNStepSizes();
+                //break;
+            //case CORRELATED:
+                //correlatedMutation();
+                //break;
+        //}
         nonUniformMutation();
     }
 
@@ -49,7 +66,7 @@ public class Individual
             }
         }
     }
-    
+
     // Page 57 of the book. Mutation probability per gene is 1, but sd controls to which extent
     private void nonUniformMutation()
     {
@@ -85,6 +102,11 @@ public class Individual
             sigma[i] = Math.max(sigma[i], epsilon);
             value[i] = boundedAdd(value[i], sigma[i] * g);
         }
+    }
+
+    private void correlatedMutation()
+    {
+
     }
 
     // check so v stays in domain of function

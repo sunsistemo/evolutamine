@@ -56,7 +56,7 @@ public class Population
                     candidate[j] *= -1;
                 }
             }
-            population.add(new Individual(candidate));
+            population.add(new Individual(candidate, rnd));
         }
     }
 
@@ -75,12 +75,16 @@ public class Population
         }
 
         sumFitness = 0.0;
+        int evals = 0;
         for (Individual ind: candidates) {
-            ind.fitness = (double) evaluation.evaluate(ind.value);
+            if (!ind.evaluated()) {
+                ind.setFitness((double) evaluation.evaluate(ind.value));
+                evals++;
+            }
             sumFitness += ind.fitness;
         }
 
-        return candidates.size(); // return number of evaluations performed
+        return evals; // return number of evaluations performed
     }
 
     /*
@@ -164,7 +168,6 @@ public class Population
         offspring.clear();
         double[][] parents = new double[numParents][N];
         double[][] children;
-        Random rnd = new Random();
 
         for (int i = 0; i < offspringSize; i += numParents) {
             for (int j = 0; j < numParents; j++) {
@@ -176,7 +179,7 @@ public class Population
             children = wholeArithmeticRecombination(parents);
 
             for (int j = 0; j < numParents; j++) {
-                offspring.add(new Individual(children[j]));
+                offspring.add(new Individual(children[j], rnd));
             }
         }
     }

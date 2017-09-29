@@ -6,30 +6,44 @@ public class Individual
 {
     public double[] value;
     public double fitness;
-    public double[] sigma;
     public double probability;
     public int rank;
+    private double[] sigma;
     private final double UB = 5.0;
     private final double LB = UB * -1;
-    Random rnd;
+    private Random rnd;
+    private boolean evaluated;
 
-    public Individual(double[] value)
+    public Individual(double[] value, Random rnd)
     {
         this.value = value;
         fitness = 0.0;
         probability = 0.0;
         rank = 0;
         sigma = new double[value.length];
-        rnd = new Random();
+        this.rnd = rnd;
 
         for (int i = 0; i < value.length; i++) {
             sigma[i] = Options.MUTATION_STEP_SIZE;
         }
+
+        evaluated = false;
     }
 
     public double fitness()
     {
         return this.fitness;
+    }
+
+    public void setFitness(double fitness)
+    {
+        this.fitness = fitness;
+        this.evaluated = true;
+    }
+
+    public boolean evaluated()
+    {
+        return this.evaluated;
     }
 
     public void mutate(Options.Mutation method)

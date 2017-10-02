@@ -287,9 +287,10 @@ public class Population
      */
     public void mutate()
     {
-        for (Individual ind: population) {
-            ind.mutate(Options.Mutation.UNCORRELATED_N);
-        }
+        //This is conceptually wrong: if you mutate the parents, the already evaluated fitness does not reflect actual fitness of mutated parent
+        //for (Individual ind: population) {
+            //ind.mutate(Options.Mutation.UNCORRELATED_N);
+        //}
         for (Individual ind: offspring) {
             ind.mutate(Options.Mutation.UNCORRELATED_N);
         }

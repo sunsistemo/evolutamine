@@ -7,9 +7,11 @@ public class Options
     public Crossover crossover;
     public Mutation mutation;
 
+    boolean multimodal;
+
     public enum ParentSelection
     {
-        FPS, LINEAR_RANKING, EXPONENTIAL_RANKING, RANDOM
+        FPS, LINEAR_RANKING, EXPONENTIAL_RANKING, RANDOM;
     }
 
     public enum Crossover
@@ -25,6 +27,11 @@ public class Options
     public Options()
     {
 
+    }
+
+    public Options(boolean multimodal)
+    {
+        this.multimodal = multimodal;
     }
 }
 

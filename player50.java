@@ -19,7 +19,6 @@ public class player50 implements ContestSubmission
     private Options options;
 
 
-
     public player50()
     {
         name = "evolutamine";

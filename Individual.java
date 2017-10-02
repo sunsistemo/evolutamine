@@ -14,6 +14,7 @@ public class Individual
     private Random rnd;
     private boolean evaluated;
 
+
     public Individual(double[] value, Random rnd)
     {
         this.value = value;

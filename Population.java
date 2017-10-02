@@ -98,22 +98,36 @@ public class Population
     public void selectParents()
     {
         matingPool.clear();
-        //psFPS();
-        psRS("linear");
-        //~ psRS("exponential");
 
-        // Stochastic Universal Sampling (SUS) algorithm p.84
-        double r = (rnd.nextDouble() / ((double) offspringSize));
-        int i = 0;
-        double cumProbability = 0.0;
-        while (matingPool.size() < offspringSize) {
-            cumProbability += population.get(i).probability;
+        if (options.multimodal)
+        {
 
-            while (r <= cumProbability) {
-                matingPool.add(population.get(i));
-                r += 1 / ((double) offspringSize);
+        } else
+        {
+            switch(options.parentSelection) {
+                case LINEAR_RANKING:
+                case EXPONENTIAL_RANKING:
+                    psRS();
+                    break;
+                case FPS:
+                    psFPS();
+                    break;
             }
-            i++;
+
+
+            // Stochastic Universal Sampling (SUS) algorithm p.84
+            double r = (rnd.nextDouble() / ((double) offspringSize));
+            int i = 0;
+            double cumProbability = 0.0;
+            while (matingPool.size() < offspringSize) {
+                cumProbability += population.get(i).probability;
+
+                while (r <= cumProbability) {
+                    matingPool.add(population.get(i));
+                    r += 1 / ((double) offspringSize);
+                }
+                i++;
+            }
         }
     }
 
@@ -126,7 +140,7 @@ public class Population
     }
 
     // Parent Selection: Ranking Selection
-    private void psRS(String ranking)
+    private void psRS()
     {
         sortPopulation();
 
@@ -135,20 +149,23 @@ public class Population
             population.get(i).rank = rank-i;
         }
 
-        if (ranking.equals("linear")) {
-            for (Individual ind: population) {
-                ind.probability = linearRankProbability(ind.rank);
-            }
-        } else if (ranking.equals("exponential")) {
-            double normalisation = 0.0;
-            for (Individual ind: population) {
-                double p = exponentialRankProbability(ind.rank);
-                ind.probability = p;
-                normalisation += p;
-            }
-            for (Individual ind: population) {
-                ind.probability /= normalisation;
-            }
+        switch (options.parentSelection) {
+            case LINEAR_RANKING:
+                for (Individual ind: population) {
+                    ind.probability = linearRankProbability(ind.rank);
+                }
+                break;
+            case EXPONENTIAL_RANKING:
+                double normalisation = 0.0;
+                for (Individual ind: population) {
+                    double p = exponentialRankProbability(ind.rank);
+                    ind.probability = p;
+                    normalisation += p;
+                }
+                for (Individual ind: population) {
+                    ind.probability /= normalisation;
+                }
+                break;
         }
     }
 
@@ -338,6 +355,17 @@ public class Population
          */
 
         population.sort(Comparator.comparingDouble(Individual::fitness).reversed());
+    }
+
+    // Calculates the distance between two individuals
+    private double distance(Individual a, Individual b)
+    {
+        double d = 0.0;
+        for (int i = 0; i < a.value.length; i++)
+        {
+            d += Math.abs(a.value[i] - b.value[i]);
+        }
+        return d;
     }
 
     /*

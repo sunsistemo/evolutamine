@@ -17,12 +17,13 @@ public class Individual
     public Individual(double[] value, Random rnd)
     {
         this.value = value;
+        this.rnd = rnd;
+
         fitness = 0.0;
         probability = 0.0;
         rank = 0;
-        sigma = new double[value.length];
-        this.rnd = rnd;
 
+        sigma = new double[value.length];
         for (int i = 0; i < value.length; i++) {
             sigma[i] = Options.MUTATION_STEP_SIZE;
         }
@@ -65,7 +66,6 @@ public class Individual
                 correlatedMutation();
                 break;
         }
-        //nonUniformMutation();
     }
 
     private void uniformMutation()

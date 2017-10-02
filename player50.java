@@ -14,8 +14,11 @@ public class player50 implements ContestSubmission
     private int evaluation_limit;
     private int populationSize;
     private int cycle;
+    private String name;
     private Population population;
-    String name;
+    private Options options;
+
+
 
     public player50()
     {
@@ -48,6 +51,11 @@ public class player50 implements ContestSubmission
         boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
 
         // Do sth with property values, e.g. specify relevant settings of your algorithm
+        options = new Options();
+        options.parentSelection = Options.ParentSelection.LINEAR_RANKING;
+        options.crossover = Options.Crossover.WHOLE_ARITHMETIC;
+        options.mutation = Options.Mutation.UNCORRELATED_N;
+
         if (isMultimodal) {
             System.out.println("Function is multimodal.");
         } else {
@@ -69,7 +77,7 @@ public class player50 implements ContestSubmission
         //int evals = 2*populationSize;
 
         // init population
-        population = new Population(populationSize, rnd);
+        population = new Population(populationSize, options, rnd);
         // calculate fitness
         evals -= population.calculateFitness(evaluation, "POPULATION");
 

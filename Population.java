@@ -21,19 +21,24 @@ public class Population
     private final int numParents;
     private double sumFitness;
     private Random rnd;
+    private Options options;
 
 
-    public Population(int size, Random rnd)
+    public Population(int size, Options options, Random rnd)
     {
         this.size = size;
+        this.options = options;
+        this.rnd = rnd;
+
         population = new ArrayList<Individual>();
         matingPool = new ArrayList<Individual>();
         offspring = new ArrayList<Individual>();
+
         numParents = 2;
         sumFitness = 0.0;
         offspringRatio = 1.0;
         offspringSize = (int) (size * offspringRatio);
-        this.rnd = rnd;
+
         populate(rnd);
     }
 
@@ -292,7 +297,7 @@ public class Population
             //ind.mutate(Options.Mutation.UNCORRELATED_N);
         //}
         for (Individual ind: offspring) {
-            ind.mutate(Options.Mutation.UNCORRELATED_N);
+            ind.mutate(options.mutation);
         }
     }
 

@@ -41,7 +41,7 @@ public class player50 implements ContestSubmission
         Properties props = evaluation.getProperties();
         // Get evaluation limit
         evaluation_limit = Integer.parseInt(props.getProperty("Evaluations"));
-        populationSize = Math.max(populationSize, (evaluation_limit/1000));
+        populationSize = evaluation_limit/100;
         System.out.println("Population size: " + populationSize);
         // Property keys depend on specific evaluation
         // E.g. double param = Double.parseDouble(props.getProperty("property_name"));

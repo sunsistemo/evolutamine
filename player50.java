@@ -56,7 +56,7 @@ public class player50 implements ContestSubmission
         //options.mutation = Options.Mutation.UNCORRELATED_N;
 
         if (isMultimodal) {
-            options.parentSelection = Options.ParentSelection.RANDOM_PAIRING;
+            options.setDeterministicCrowding();
         }
 
         if (hasStructure) {

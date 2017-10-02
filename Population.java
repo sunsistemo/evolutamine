@@ -22,7 +22,7 @@ public class Population
     private double sumFitness;
     private Random rnd;
     private Options options;
-    private int[][] pairing;
+    private Individual[][] pairing;
 
 
     public Population(int size, Options options, Random rnd)
@@ -39,7 +39,7 @@ public class Population
         sumFitness = 0.0;
         offspringRatio = 1.0;
         offspringSize = (int) (size * offspringRatio);
-        pairing = new int[size/numparents][2*numparents];
+        pairing = new Individual[size/numParents][2*numParents];
         populate(rnd);
     }
 
@@ -328,14 +328,15 @@ public class Population
     {
         switch(options.survivorSelection) {
             case GENERATIONAL:
-                replacePopulationWithOffspring()
+                replacePopulationWithOffspring();
                 break;
             case MU_PLUS_LAMBDA:
-                muPlusLambdaSelection()
+                muPlusLambdaSelection();
                 break;
             case DISTANCE_TOURNAMENT:
-                muPlusLambdaSelection()
+                distanceTournamentSelection();
                 break;
+        }
     }
 
     private void replacePopulationWithOffspring()
@@ -356,7 +357,7 @@ public class Population
         population.subList(size, size + offspringSize).clear(); //remove the worst half of the population
     }
 
-    private void distanceTournamenSelection()
+    private void distanceTournamentSelection()
     {
 
     }

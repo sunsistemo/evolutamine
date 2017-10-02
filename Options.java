@@ -44,9 +44,9 @@ public class Options
         survivorSelection = SurvivorSelection.MU_PLUS_LAMBDA;
     }
 
-    public void setDeterministicCrowding();
+    public void setDeterministicCrowding()
     {
-        parentSelection = ParentSelection.RANDOM_PAIRING
+        parentSelection = ParentSelection.RANDOM_PAIRING;
         crossover = Crossover.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
         survivorSelection = SurvivorSelection.DISTANCE_TOURNAMENT;

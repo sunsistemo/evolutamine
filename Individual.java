@@ -48,24 +48,24 @@ public class Individual
 
     public void mutate(Options.Mutation method)
     {
-        //switch(method) {
-            //case UNIFORM:
-                //uniformMutation();
-                //break;
-            //case NON_UNIFORM:
-                //nonUniformMutation();
-                //break;
-            //case UNCORRELATED:
-                //uncorrelatedMutationWithOneStepSize();
-                //break;
-            //case UNCORRELATED_N:
-                //uncorrelatedMutationWithNStepSizes();
-                //break;
-            //case CORRELATED:
-                //correlatedMutation();
-                //break;
-        //}
-        nonUniformMutation();
+        switch(method) {
+            case UNIFORM:
+                uniformMutation();
+                break;
+            case NON_UNIFORM:
+                nonUniformMutation();
+                break;
+            case UNCORRELATED:
+                uncorrelatedMutationWithOneStepSize();
+                break;
+            case UNCORRELATED_N:
+                uncorrelatedMutationWithNStepSizes();
+                break;
+            case CORRELATED:
+                correlatedMutation();
+                break;
+        }
+        //nonUniformMutation();
     }
 
     private void uniformMutation()

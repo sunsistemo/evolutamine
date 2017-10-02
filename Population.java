@@ -99,51 +99,36 @@ public class Population
     {
         matingPool.clear();
 
-        if (options.multimodal)
-        {
-
-        } else
-        {
+        if (options.multimodal) {
+            for (Individual parent: population) {
+                matingPool.add(parent);
+            }
+        } else {
             switch(options.parentSelection) {
                 case LINEAR_RANKING:
                 case EXPONENTIAL_RANKING:
-                    psRS();
+                    rankingSelection();
                     break;
                 case FPS:
-                    psFPS();
+                    fitnessProportionalSelection();
                     break;
-            }
-
-
-            // Stochastic Universal Sampling (SUS) algorithm p.84
-            double r = (rnd.nextDouble() / ((double) offspringSize));
-            int i = 0;
-            double cumProbability = 0.0;
-            while (matingPool.size() < offspringSize) {
-                cumProbability += population.get(i).probability;
-
-                while (r <= cumProbability) {
-                    matingPool.add(population.get(i));
-                    r += 1 / ((double) offspringSize);
-                }
-                i++;
             }
         }
     }
 
     // Parent Selection: Fitness Proportional Selection
-    private void psFPS()
+    private void fitnessProportionalSelection()
     {
         for (Individual ind: population) {
             ind.probability = ind.fitness / sumFitness;
         }
+        sampleParents();
     }
 
     // Parent Selection: Ranking Selection
-    private void psRS()
+    private void rankingSelection()
     {
         sortPopulation();
-
         int rank = population.size() - 1;
         for (int i = 0; i < population.size(); i++) {
             population.get(i).rank = rank-i;
@@ -167,6 +152,7 @@ public class Population
                 }
                 break;
         }
+        sampleParents();
     }
 
     // Parent Selection: Ranking Selection Probability (Page 82)
@@ -180,6 +166,23 @@ public class Population
     private double exponentialRankProbability(int rank)
     {
         return (1 - Math.exp(-1 * rank));
+    }
+
+    private void sampleParents()
+    {
+        // Stochastic Universal Sampling (SUS) algorithm p.84
+        double r = (rnd.nextDouble() / ((double) offspringSize));
+        int i = 0;
+        double cumProbability = 0.0;
+        while (matingPool.size() < offspringSize) {
+            cumProbability += population.get(i).probability;
+
+            while (r <= cumProbability) {
+                matingPool.add(population.get(i));
+                r += 1 / ((double) offspringSize);
+            }
+            i++;
+        }
     }
 
     /*

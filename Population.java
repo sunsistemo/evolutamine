@@ -18,11 +18,11 @@ public class Population
     private List<Individual> matingPool;
     private List<Individual> offspring;
     private final int N = 10;
-    private final int numParents;
+    private final int numParents = 2;
     private double sumFitness;
     private Random rnd;
     private Options options;
-    private Individual[][] pairing;
+    private int[][] pairing;
 
 
     public Population(int size, Options options, Random rnd)
@@ -34,12 +34,12 @@ public class Population
         population = new ArrayList<Individual>();
         matingPool = new ArrayList<Individual>();
         offspring = new ArrayList<Individual>();
+        pairing = new int[size/numParents][2*numParents];
 
-        numParents = 2;
         sumFitness = 0.0;
         offspringRatio = 1.0;
         offspringSize = (int) (size * offspringRatio);
-        pairing = new Individual[size/numParents][2*numParents];
+
         populate(rnd);
     }
 
@@ -201,7 +201,7 @@ public class Population
                 matingPool.remove(index);
             }
 
-            children = wholeArithmeticRecombination(parents);
+            children = recombination(parents);
 
             for (int j = 0; j < numParents; j++) {
                 offspring.add(new Individual(children[j], rnd));
@@ -213,7 +213,38 @@ public class Population
     public void deterministicCrowding()
     {
         offspring.clear();
+        double[][] parents = new double[numParents][N];
+        double[][] children;
 
+        Collections.shuffle(matingPool);
+
+        for (int i = 0; i < size; i += numParents) {
+            parents[0] = matingPool.get(i).value;
+            parents[1] = matingPool.get(i+1).value;
+
+            children = recombination(parents);
+
+            for (int j = 0; j < numParents; j++) {
+                offspring.add(new Individual(children[j], rnd));
+            }
+        }
+    }
+
+    private double[][] recombination(double[][] parents)
+    {
+        switch (options.recombination) {
+            case DISCRETE:
+                return discreteRecombination(parents);
+            case SIMPLE_ARITHMETIC:
+                return simpleArithmeticRecombination(parents);
+            case SINGLE_ARITHMETIC:
+                return singleArithmeticRecombination(parents);
+            case WHOLE_ARITHMETIC:
+                return wholeArithmeticRecombination(parents);
+            case BLEND_RECOMBINATION:
+                return blendRecombination(parents);
+        }
+        return parents;
     }
 
     private double[][] discreteRecombination(double[][] parents)
@@ -359,7 +390,46 @@ public class Population
 
     private void distanceTournamentSelection()
     {
+        // Create copy of offspring list so we can remove in original list without tampering with the retrieval index
+        List<Individual> children = new ArrayList<Individual>();
+        for (Individual child: offspring) {
+            children.add(child);
+        }
 
+        for (int i = 0; i < size; i += numParents) {
+            Individual p1 = matingPool.get(i);
+            Individual p2 = matingPool.get(i+1);
+
+            Individual o1 = children.get(i);
+            Individual o2 = children.get(i+1);
+
+            if (distance(p1, o1) + distance(p2, o2) < distance(p1, o2) + distance(p2, o1)) {
+                if(p1.fitness < o1.fitness) {
+                    population.remove(p1);
+                } else {
+                    offspring.remove(o1);
+                }
+
+                if(p2.fitness < o2.fitness) {
+                    population.remove(p2);
+                } else {
+                    offspring.remove(o2);
+                }
+            } else {
+                if(p1.fitness < o2.fitness) {
+                    population.remove(p1);
+                } else {
+                    offspring.remove(o2);
+                }
+
+                if(p2.fitness < o1.fitness) {
+                    population.remove(p2);
+                } else {
+                    offspring.remove(o1);
+                }
+            }
+        }
+        population.addAll(offspring);
     }
 
     /*

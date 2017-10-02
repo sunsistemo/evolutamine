@@ -4,7 +4,7 @@ public class Options
     static final double MUTATION_STEP_SIZE = 0.05;
 
     public ParentSelection parentSelection;
-    public Crossover crossover;
+    public Recombination recombination;
     public Mutation mutation;
     public SurvivorSelection survivorSelection;
 
@@ -15,9 +15,9 @@ public class Options
         FPS, LINEAR_RANKING, EXPONENTIAL_RANKING, RANDOM_PAIRING;
     }
 
-    public enum Crossover
+    public enum Recombination
     {
-        DISCRETE, SIMPLE_ARITHMETIC, SINGLE_ARITHMETIC, WHOLE_ARITHMETIC, BLEND_ARITHMETIC;
+        DISCRETE, SIMPLE_ARITHMETIC, SINGLE_ARITHMETIC, WHOLE_ARITHMETIC, BLEND_RECOMBINATION;
     }
 
     public enum Mutation
@@ -39,7 +39,7 @@ public class Options
     {
         this.multimodal = multimodal;
         parentSelection = ParentSelection.LINEAR_RANKING;
-        crossover = Crossover.WHOLE_ARITHMETIC;
+        recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
         survivorSelection = SurvivorSelection.MU_PLUS_LAMBDA;
     }
@@ -47,7 +47,7 @@ public class Options
     public void setDeterministicCrowding()
     {
         parentSelection = ParentSelection.RANDOM_PAIRING;
-        crossover = Crossover.WHOLE_ARITHMETIC;
+        recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
         survivorSelection = SurvivorSelection.DISTANCE_TOURNAMENT;
     }

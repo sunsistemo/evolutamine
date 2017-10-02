@@ -41,7 +41,7 @@ public class player50 implements ContestSubmission
         Properties props = evaluation.getProperties();
         // Get evaluation limit
         evaluation_limit = Integer.parseInt(props.getProperty("Evaluations"));
-        populationSize = evaluation_limit/100;
+        populationSize = Math.max(populationSize, evaluation_limit/1000);
         System.out.println("Population size: " + populationSize);
         // Property keys depend on specific evaluation
         // E.g. double param = Double.parseDouble(props.getProperty("property_name"));
@@ -52,10 +52,11 @@ public class player50 implements ContestSubmission
         // Do sth with property values, e.g. specify relevant settings of your algorithm
         options = new Options(isMultimodal);
         //options.parentSelection = Options.ParentSelection.LINEAR_RANKING;
-        //options.crossover = Options.Crossover.WHOLE_ARITHMETIC;
+        //options.crossover = Options.Recombination.WHOLE_ARITHMETIC;
         //options.mutation = Options.Mutation.UNCORRELATED_N;
 
-        if (isMultimodal) {
+        if (isMultimodal && !hasStructure) {
+            System.out.println("Function is Multimodal.");
             options.setDeterministicCrowding();
         }
 
@@ -84,7 +85,11 @@ public class player50 implements ContestSubmission
             population.selectParents();
 
             // Apply crossover / mutation operators
-            population.crossover();
+            if(options.multimodal) {
+                population.deterministicCrowding();
+            } else {
+                population.crossover();
+            }
             population.mutate();
 
             // Check fitness of unknown function

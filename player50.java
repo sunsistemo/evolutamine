@@ -50,10 +50,10 @@ public class player50 implements ContestSubmission
         boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
 
         // Do sth with property values, e.g. specify relevant settings of your algorithm
-        options = new Options();
-        options.parentSelection = Options.ParentSelection.LINEAR_RANKING;
-        options.crossover = Options.Crossover.WHOLE_ARITHMETIC;
-        options.mutation = Options.Mutation.UNCORRELATED_N;
+        options = new Options(isMultimodal);
+        //options.parentSelection = Options.ParentSelection.LINEAR_RANKING;
+        //options.crossover = Options.Crossover.WHOLE_ARITHMETIC;
+        //options.mutation = Options.Mutation.UNCORRELATED_N;
 
         if (isMultimodal) {
             System.out.println("Function is multimodal.");
@@ -83,7 +83,15 @@ public class player50 implements ContestSubmission
         cycle = 0;
         while (evals > 0) {
             // Select parents
-            population.selectParents();
+            try
+            {
+                population.selectParents();
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+
 
             // Apply crossover / mutation operators
             population.crossover();

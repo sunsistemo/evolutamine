@@ -26,12 +26,15 @@ public class Options
 
     public Options()
     {
-
+        this(false);
     }
 
     public Options(boolean multimodal)
     {
         this.multimodal = multimodal;
+        parentSelection = ParentSelection.LINEAR_RANKING;
+        crossover = Crossover.WHOLE_ARITHMETIC;
+        mutation = Mutation.UNCORRELATED_N;
     }
 }
 

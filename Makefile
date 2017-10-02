@@ -48,6 +48,6 @@ runall: $(SUBMISSION)
 	@printf "Complete!\n"
 
 clean:
-	rm -rf $(CLASSES) $(INNERCLASSES) $(SUBMISSION) tmp
+	rm -rf $(CLASSES:.class=*.class) $(SUBMISSION) tmp
 
 clean-build: clean $(SUBMISSION)

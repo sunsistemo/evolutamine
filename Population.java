@@ -22,6 +22,7 @@ public class Population
     private double sumFitness;
     private Random rnd;
     private Options options;
+    private int[][] pairing;
 
 
     public Population(int size, Options options, Random rnd)
@@ -38,7 +39,7 @@ public class Population
         sumFitness = 0.0;
         offspringRatio = 1.0;
         offspringSize = (int) (size * offspringRatio);
-
+        pairing = new int[size/numparents][2*numparents];
         populate(rnd);
     }
 
@@ -325,10 +326,16 @@ public class Population
      */
     public void selectSurvivors()
     {
-        // (μ + λ) selection. merge parents and offspring and keep top μ
-        population.addAll(offspring);
-        sortPopulation();
-        population.subList(size, size + offspringSize).clear(); //remove the worst half of the population
+        switch(options.survivorSelection) {
+            case GENERATIONAL:
+                replacePopulationWithOffspring()
+                break;
+            case MU_PLUS_LAMBDA:
+                muPlusLambdaSelection()
+                break;
+            case DISTANCE_TOURNAMENT:
+                muPlusLambdaSelection()
+                break;
     }
 
     private void replacePopulationWithOffspring()
@@ -339,6 +346,19 @@ public class Population
             population.add(child);
         }
         offspring.clear();
+    }
+
+    private void muPlusLambdaSelection()
+    {
+        // (μ + λ) selection. merge parents and offspring and keep top μ
+        population.addAll(offspring);
+        sortPopulation();
+        population.subList(size, size + offspringSize).clear(); //remove the worst half of the population
+    }
+
+    private void distanceTournamenSelection()
+    {
+
     }
 
     /*

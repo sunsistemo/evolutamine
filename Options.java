@@ -27,7 +27,7 @@ public class Options
 
     public enum SurvivorSelection
     {
-        MU_PLUS_LAMBDA, DISTANCE_TOURNAMENT;
+        GENERATIONAL, MU_PLUS_LAMBDA, DISTANCE_TOURNAMENT;
     }
 
     public Options()

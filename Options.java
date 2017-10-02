@@ -6,12 +6,13 @@ public class Options
     public ParentSelection parentSelection;
     public Crossover crossover;
     public Mutation mutation;
+    public SurvivorSelection survivorSelection;
 
     boolean multimodal;
 
     public enum ParentSelection
     {
-        FPS, LINEAR_RANKING, EXPONENTIAL_RANKING, RANDOM;
+        FPS, LINEAR_RANKING, EXPONENTIAL_RANKING, RANDOM_PAIRING;
     }
 
     public enum Crossover
@@ -22,6 +23,11 @@ public class Options
     public enum Mutation
     {
         UNIFORM, NON_UNIFORM, UNCORRELATED, UNCORRELATED_N, CORRELATED;
+    }
+
+    public enum SurvivorSelection
+    {
+        MU_PLUS_LAMBDA, DISTANCE_TOURNAMENT;
     }
 
     public Options()
@@ -35,6 +41,7 @@ public class Options
         parentSelection = ParentSelection.LINEAR_RANKING;
         crossover = Crossover.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
+        survivorSelection = SurvivorSelection.MU_PLUS_LAMBDA;
     }
 }
 

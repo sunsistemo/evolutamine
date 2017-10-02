@@ -56,9 +56,7 @@ public class player50 implements ContestSubmission
         //options.mutation = Options.Mutation.UNCORRELATED_N;
 
         if (isMultimodal) {
-            System.out.println("Function is multimodal.");
-        } else {
-            // Do sth else
+            options.parentSelection = Options.ParentSelection.RANDOM_PAIRING;
         }
 
         if (hasStructure) {
@@ -83,15 +81,7 @@ public class player50 implements ContestSubmission
         cycle = 0;
         while (evals > 0) {
             // Select parents
-            try
-            {
-                population.selectParents();
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-
+            population.selectParents();
 
             // Apply crossover / mutation operators
             population.crossover();

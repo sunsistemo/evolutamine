@@ -99,20 +99,19 @@ public class Population
     {
         matingPool.clear();
 
-        if (options.multimodal) {
-            for (Individual parent: population) {
-                matingPool.add(parent);
-            }
-        } else {
-            switch(options.parentSelection) {
-                case LINEAR_RANKING:
-                case EXPONENTIAL_RANKING:
-                    rankingSelection();
-                    break;
-                case FPS:
-                    fitnessProportionalSelection();
-                    break;
-            }
+        switch(options.parentSelection) {
+            case RANDOM_PAIRING:
+                for (Individual parent: population) {
+                    matingPool.add(parent);
+                }
+                break;
+            case LINEAR_RANKING:
+            case EXPONENTIAL_RANKING:
+                rankingSelection();
+                break;
+            case FPS:
+                fitnessProportionalSelection();
+                break;
         }
     }
 

@@ -42,7 +42,6 @@ public class player50 implements ContestSubmission
         // Get evaluation limit
         evaluation_limit = Integer.parseInt(props.getProperty("Evaluations"));
         populationSize = Math.max(populationSize, evaluation_limit/1000);
-        System.out.println("Population size: " + populationSize);
         // Property keys depend on specific evaluation
         // E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -50,14 +49,18 @@ public class player50 implements ContestSubmission
         boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
 
         // Do sth with property values, e.g. specify relevant settings of your algorithm
-        options = new Options(isMultimodal);
+        options = new Options();
         //options.parentSelection = Options.ParentSelection.LINEAR_RANKING;
         //options.crossover = Options.Recombination.WHOLE_ARITHMETIC;
         //options.mutation = Options.Mutation.UNCORRELATED_N;
 
-        if (isMultimodal && !hasStructure) {
+        if (isMultimodal) {
+            options.parentSelection = Options.ParentSelection.EXPONENTIAL_RANKING;
+            populationSize *= 10;
             System.out.println("Function is Multimodal.");
-            options.setDeterministicCrowding();
+            if (!hasStructure) {
+                options.setDeterministicCrowding();
+            }
         }
 
         if (hasStructure) {
@@ -67,6 +70,7 @@ public class player50 implements ContestSubmission
         if (isSeparable) {
             System.out.println("Function is separable.");
         }
+        System.out.println("Population size: " + populationSize);
     }
 
     public void run()
@@ -85,11 +89,7 @@ public class player50 implements ContestSubmission
             population.selectParents();
 
             // Apply crossover / mutation operators
-            if(options.multimodal) {
-                population.deterministicCrowding();
-            } else {
-                population.crossover();
-            }
+            population.crossover();
             population.mutate();
 
             // Check fitness of unknown function

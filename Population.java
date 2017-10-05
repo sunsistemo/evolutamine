@@ -22,7 +22,6 @@ public class Population
     private double sumFitness;
     private Random rnd;
     private Options options;
-    private int[][] pairing;
 
 
     public Population(int size, Options options, Random rnd)
@@ -34,7 +33,6 @@ public class Population
         population = new ArrayList<Individual>();
         matingPool = new ArrayList<Individual>();
         offspring = new ArrayList<Individual>();
-        pairing = new int[size/numParents][2*numParents];
 
         sumFitness = 0.0;
         offspringRatio = 1.0;
@@ -190,6 +188,11 @@ public class Population
      */
     public void crossover()
     {
+        if(options.crowding) {
+            deterministicCrowding();
+            return;
+        }
+
         offspring.clear();
         double[][] parents = new double[numParents][N];
         double[][] children;

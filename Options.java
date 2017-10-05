@@ -8,7 +8,7 @@ public class Options
     public Mutation mutation;
     public SurvivorSelection survivorSelection;
 
-    boolean multimodal;
+    boolean crowding;
 
     public enum ParentSelection
     {
@@ -32,12 +32,6 @@ public class Options
 
     public Options()
     {
-        this(false);
-    }
-
-    public Options(boolean multimodal)
-    {
-        this.multimodal = multimodal;
         parentSelection = ParentSelection.LINEAR_RANKING;
         recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
@@ -46,6 +40,7 @@ public class Options
 
     public void setDeterministicCrowding()
     {
+        crowding = true;
         parentSelection = ParentSelection.RANDOM_PAIRING;
         recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;

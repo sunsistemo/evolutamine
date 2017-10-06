@@ -121,7 +121,7 @@ public class Individual
 
     }
 
-    // check so v stays in domain of function
+    // check to ensure v stays in domain of function
     private double boundedAdd(double v, double dv)
     {
         if (dv < 0) {

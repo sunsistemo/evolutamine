@@ -49,9 +49,6 @@ public class player50 implements ContestSubmission
 
         // Do sth with property values, e.g. specify relevant settings of your algorithm
         options = new Options();
-        //options.parentSelection = Options.ParentSelection.LINEAR_RANKING;
-        //options.crossover = Options.Recombination.WHOLE_ARITHMETIC;
-        //options.mutation = Options.Mutation.UNCORRELATED_N;
 
         if (isMultimodal) {
             options.parentSelection = Options.ParentSelection.EXPONENTIAL_RANKING;
@@ -62,14 +59,13 @@ public class player50 implements ContestSubmission
                 populationSize *= 10;
             }
         }
-
         if (hasStructure) {
             System.out.println("Function has structure.");
         }
-
         if (isSeparable) {
             System.out.println("Function is separable.");
         }
+
         System.out.println("Population size: " + populationSize);
     }
 

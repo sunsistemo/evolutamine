@@ -32,6 +32,7 @@ public class Options
 
     public Options()
     {
+        crowding = false;
         parentSelection = ParentSelection.LINEAR_RANKING;
         recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
@@ -41,9 +42,7 @@ public class Options
     public void setDeterministicCrowding()
     {
         crowding = true;
-        parentSelection = ParentSelection.RANDOM_PAIRING;
-        recombination = Recombination.WHOLE_ARITHMETIC;
-        mutation = Mutation.UNCORRELATED_N;
+        parentSelection = ParentSelection.RANDOM_PAIRING;;
         survivorSelection = SurvivorSelection.DISTANCE_TOURNAMENT;
     }
 }

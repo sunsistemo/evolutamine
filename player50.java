@@ -41,7 +41,6 @@ public class player50 implements ContestSubmission
         Properties props = evaluation.getProperties();
         // Get evaluation limit
         evaluation_limit = Integer.parseInt(props.getProperty("Evaluations"));
-        populationSize = Math.max(populationSize, evaluation_limit/1000);
         // Property keys depend on specific evaluation
         // E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -56,10 +55,11 @@ public class player50 implements ContestSubmission
 
         if (isMultimodal) {
             options.parentSelection = Options.ParentSelection.EXPONENTIAL_RANKING;
-            populationSize *= 10;
+            populationSize = 1000;
             System.out.println("Function is Multimodal.");
             if (!hasStructure) {
                 options.setDeterministicCrowding();
+                populationSize *= 10;
             }
         }
 
@@ -81,7 +81,7 @@ public class player50 implements ContestSubmission
         // init population
         population = new Population(populationSize, options, rnd);
         // calculate fitness
-        evals -= population.calculateFitness(evaluation, "POPULATION");
+        evals -= population.evaluateInitialPopulation(evaluation);
 
         cycle = 0;
         while (evals > 0) {
@@ -94,7 +94,7 @@ public class player50 implements ContestSubmission
 
             // Check fitness of unknown function
             try {
-                evals -= population.calculateFitness(evaluation, "OFFSPRING");
+                evals -= population.evaluateOffspring(evaluation);
             } catch (NullPointerException e) {
                 System.out.println("\033[1mEvaluation limit reached!\033[0m");
                 break;
@@ -102,7 +102,6 @@ public class player50 implements ContestSubmission
 
             // Select survivors
             population.selectSurvivors();
-
             cycle++;
         }
         System.out.println("Evolutionary Cycles: " + cycle);

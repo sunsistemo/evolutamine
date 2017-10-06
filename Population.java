@@ -19,7 +19,6 @@ public class Population
     private List<Individual> offspring;
     private final int N = 10;
     private final int numParents = 2;
-    private double sumFitness;
     private Random rnd;
     private Options options;
 
@@ -34,7 +33,6 @@ public class Population
         matingPool = new ArrayList<Individual>();
         offspring = new ArrayList<Individual>();
 
-        sumFitness = 0.0;
         offspringRatio = 1.0;
         offspringSize = (int) (size * offspringRatio);
 
@@ -67,27 +65,27 @@ public class Population
     /*
      * Evaluation
      */
-    public int calculateFitness(ContestEvaluation evaluation, String select)
+    public int evaluateInitialPopulation(ContestEvaluation evaluation)
     {
-        List<Individual> candidates;
-        if (select.equals("POPULATION")) {
-            candidates = population;
-        } else if (select.equals("OFFSPRING")) {
-            candidates = offspring;
-        } else {
-            candidates = new ArrayList<Individual>();
-        }
-
-        sumFitness = 0.0;
         int evals = 0;
-        for (Individual ind: candidates) {
-            if (!ind.evaluated()) {
-                ind.setFitness((double) evaluation.evaluate(ind.value));
+        for (Individual parent: population) {
+            if (!parent.evaluated()) {
+                parent.setFitness((double) evaluation.evaluate(parent.value));
                 evals++;
             }
-            sumFitness += ind.fitness;
         }
+        return evals; // return number of evaluations performed
+    }
 
+    public int evaluateOffspring(ContestEvaluation evaluation)
+    {
+        int evals = 0;
+        for (Individual child: offspring) {
+            if (!child.evaluated()) {
+                child.setFitness((double) evaluation.evaluate(child.value));
+                evals++;
+            }
+        }
         return evals; // return number of evaluations performed
     }
 
@@ -96,8 +94,6 @@ public class Population
      */
     public void selectParents()
     {
-        matingPool.clear();
-
         switch(options.parentSelection) {
             case RANDOM_PAIRING:
                 for (Individual parent: population) {
@@ -117,6 +113,10 @@ public class Population
     // Parent Selection: Fitness Proportional Selection
     private void fitnessProportionalSelection()
     {
+        double sumFitness = 0.0;
+        for (Individual ind: population) {
+            sumFitness += ind.fitness;
+        }
         for (Individual ind: population) {
             ind.probability = ind.fitness / sumFitness;
         }
@@ -203,27 +203,6 @@ public class Population
                 parents[j] = matingPool.get(index).value;
                 matingPool.remove(index);
             }
-
-            children = recombination(parents);
-
-            for (int j = 0; j < numParents; j++) {
-                offspring.add(new Individual(children[j]));
-            }
-        }
-    }
-
-    // Deterministic Crowding p94
-    public void deterministicCrowding()
-    {
-        offspring.clear();
-        double[][] parents = new double[numParents][N];
-        double[][] children;
-
-        Collections.shuffle(matingPool);
-
-        for (int i = 0; i < size; i += numParents) {
-            parents[0] = matingPool.get(i).value;
-            parents[1] = matingPool.get(i+1).value;
 
             children = recombination(parents);
 
@@ -350,8 +329,8 @@ public class Population
         //for (Individual ind: population) {
             //ind.mutate(Options.Mutation.UNCORRELATED_N);
         //}
-        for (Individual ind: offspring) {
-            ind.mutate(options.mutation, rnd);
+        for (Individual child: offspring) {
+            child.mutate(options.mutation, rnd);
         }
     }
 
@@ -393,46 +372,133 @@ public class Population
 
     private void distanceTournamentSelection()
     {
-        // Create copy of offspring list so we can remove in original list without tampering with the retrieval index
-        List<Individual> children = new ArrayList<Individual>();
-        for (Individual child: offspring) {
-            children.add(child);
-        }
+        List<Individual> newGeneration = new ArrayList<Individual>();
+
+        //System.out.println("TOURNAMENT: " + population.size());
+        //System.out.println("Parent size: " + population.size());
+        //System.out.println("Mating pool size: " + matingPool.size());
+        //System.out.println("Offspring size: " + offspring.size());
+        //System.out.println("New Generation size: " + newGeneration.size());
 
         for (int i = 0; i < size; i += numParents) {
             Individual p1 = matingPool.get(i);
             Individual p2 = matingPool.get(i+1);
 
-            Individual o1 = children.get(i);
-            Individual o2 = children.get(i+1);
+            Individual o1 = offspring.get(i);
+            Individual o2 = offspring.get(i+1);
 
-            if (distance(p1, o1) + distance(p2, o2) < distance(p1, o2) + distance(p2, o1)) {
-                if(p1.fitness < o1.fitness) {
-                    population.remove(p1);
+            double d11 = distance(p1, o1);
+            double d12 = distance(p1, o2);
+            double d22 = distance(p2, o2);
+            double d21 = distance(p2, o1);
+            //String s = "d11: " + d11 + ", d22: " + d22 + ", sum1122: " + (d11+d22) + "\n";
+            //s += "d12: " + d12 + ", d21: " + d21 + ", sum1221: " + (d12+d21);
+            //System.out.println(s);
+            if ((d11 + d22) < (d12 + d21)) {
+                //System.out.print("fo1: " + o1.fitness + " fp1: " + p1.fitness);
+                if(o1.fitness > p1.fitness) {
+                    newGeneration.add(o1);
+                    //System.out.println("\t\to1 survives!");
                 } else {
-                    offspring.remove(o1);
+                    newGeneration.add(p1);
+                    //System.out.println("\t\tp1 survives!");
                 }
-
-                if(p2.fitness < o2.fitness) {
-                    population.remove(p2);
+                //System.out.print("fo2: " + o2.fitness + " fp2: " + p2.fitness);
+                if(o2.fitness > p2.fitness) {
+                    newGeneration.add(o2);
+                    //System.out.println("\t\to2 survives!");
                 } else {
-                    offspring.remove(o2);
+                    newGeneration.add(p2);
+                    //System.out.println("\t\tp2 survives!");
                 }
             } else {
-                if(p1.fitness < o2.fitness) {
-                    population.remove(p1);
+                //System.out.print("fo2: " + o2.fitness + " fp1: " + p1.fitness);
+                if(o2.fitness > p1.fitness) {
+                    newGeneration.add(o2);
+                    //System.out.println("\t\to2 survives!");
                 } else {
-                    offspring.remove(o2);
+                    newGeneration.add(p1);
+                    //System.out.println("\t\tp1 survives!");
                 }
-
-                if(p2.fitness < o1.fitness) {
-                    population.remove(p2);
+                //System.out.print("fo1: " + o1.fitness + " fp2: " + p2.fitness);
+                if(o1.fitness > p2.fitness) {
+                    newGeneration.add(o1);
+                    //System.out.println("\t\to1 survives!");
                 } else {
-                    offspring.remove(o1);
+                    newGeneration.add(p2);
+                    //System.out.println("\t\tp2 survives!");
                 }
             }
         }
-        population.addAll(offspring);
+        population.clear();
+        matingPool.clear();
+        offspring.clear();
+        //System.out.println("Parent size: " + population.size());
+        //System.out.println("Mating pool size: " + matingPool.size());
+        //System.out.println("Offspring size: " + offspring.size());
+        //System.out.println("New Generation size: " + newGeneration.size());
+
+        for (Individual candidate: newGeneration) {
+            population.add(candidate);
+        }
+        newGeneration.clear();
+        //System.out.println("New population size: " + population.size());
+        //System.out.println("New Generation size: " + newGeneration.size());
+
+    }
+
+    /*
+     *
+     * MultiModal functions
+     *
+     */
+
+    // Deterministic Crowding p94
+    public void deterministicCrowding()
+    {
+        //System.out.println("Parent size: " + population.size());
+        //System.out.println("Mating pool size: " + matingPool.size());
+        //System.out.println("Offspring size: " + offspring.size());
+        double[][] parents = new double[numParents][N];
+        double[][] children;
+
+        //System.out.println("Parents:");
+        //for (int i = 0; i < size; i++) {
+            //System.out.println(Arrays.toString(population.get(i).value));
+        //}
+        //System.out.println("Matingpool:");
+        //for (int i = 0; i < size; i++) {
+            //System.out.println(Arrays.toString(matingPool.get(i).value));
+        //}
+
+        Collections.shuffle(matingPool);
+
+        //System.out.println("Matingpool:");
+        //for (int i = 0; i < size; i++) {
+            //System.out.println(Arrays.toString(matingPool.get(i).value));
+        //}
+
+        for (int i = 0; i < size; i += numParents) {
+            parents[0] = matingPool.get(i).value;
+            parents[1] = matingPool.get(i+1).value;
+
+            //System.out.println("Parent0");
+            //System.out.println(Arrays.toString(parents[0]));
+            //System.out.println("Parent1");
+            //System.out.println(Arrays.toString(parents[1]));
+
+            children = recombination(parents);
+
+            for (int j = 0; j < numParents; j++) {
+                offspring.add(new Individual(children[j]));
+            }
+            //System.out.println("Child0");
+            //System.out.println(Arrays.toString(children[0]));
+            //System.out.println(Arrays.toString(offspring.get(i).value));
+            //System.out.println("Child1");
+            //System.out.println(Arrays.toString(children[1]));
+            //System.out.println("Offspring size: " + offspring.size());
+        }
     }
 
     /*
@@ -461,7 +527,7 @@ public class Population
         {
             d += Math.abs(a.value[i] - b.value[i]);
         }
-        return d;
+        return d / a.value.length;
     }
 
     /*

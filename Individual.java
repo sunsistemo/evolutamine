@@ -10,7 +10,7 @@ public class Individual
     public int rank;
     private double[] sigma;
     private final double UB = 5.0;
-    private final double LB = UB * -1;
+    private final double LB = -UB;
     private boolean evaluated;
 
 

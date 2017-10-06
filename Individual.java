@@ -11,15 +11,12 @@ public class Individual
     private double[] sigma;
     private final double UB = 5.0;
     private final double LB = UB * -1;
-    private Random rnd;
     private boolean evaluated;
 
 
-    public Individual(double[] value, Random rnd)
+    public Individual(double[] value)
     {
         this.value = value;
-        this.rnd = rnd;
-
         fitness = 0.0;
         probability = 0.0;
         rank = 0;
@@ -48,28 +45,28 @@ public class Individual
         return this.evaluated;
     }
 
-    public void mutate(Options.Mutation method)
+    public void mutate(Options.Mutation method, Random rnd)
     {
         switch(method) {
             case UNIFORM:
-                uniformMutation();
+                uniformMutation(rnd);
                 break;
             case NON_UNIFORM:
-                nonUniformMutation();
+                nonUniformMutation(rnd);
                 break;
             case UNCORRELATED:
-                uncorrelatedMutationWithOneStepSize();
+                uncorrelatedMutationWithOneStepSize(rnd);
                 break;
             case UNCORRELATED_N:
-                uncorrelatedMutationWithNStepSizes();
+                uncorrelatedMutationWithNStepSizes(rnd);
                 break;
             case CORRELATED:
-                correlatedMutation();
+                correlatedMutation(rnd);
                 break;
         }
     }
 
-    private void uniformMutation()
+    private void uniformMutation(Random rnd)
     {
         for (int i = 0; i < value.length; i++) {
             double r = rnd.nextDouble();
@@ -83,7 +80,7 @@ public class Individual
     }
 
     // Page 57 of the book. Mutation probability per gene is 1, but sd controls to which extent
-    private void nonUniformMutation()
+    private void nonUniformMutation(Random rnd)
     {
         for (int i = 0; i < value.length; i++) {
             double h = rnd.nextGaussian() * sigma[0];
@@ -91,7 +88,7 @@ public class Individual
         }
     }
 
-    private void uncorrelatedMutationWithOneStepSize()
+    private void uncorrelatedMutationWithOneStepSize(Random rnd)
     {
         double tau = 0.9;
         double epsilon = 0.025;
@@ -104,7 +101,7 @@ public class Individual
         }
     }
 
-    private void uncorrelatedMutationWithNStepSizes()
+    private void uncorrelatedMutationWithNStepSizes(Random rnd)
     {
         double tau = 0.05;    // local learning rate
         double tau2 = 0.9;   // global learning rate
@@ -119,7 +116,7 @@ public class Individual
         }
     }
 
-    private void correlatedMutation()
+    private void correlatedMutation(Random rnd)
     {
 
     }

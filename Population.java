@@ -60,7 +60,7 @@ public class Population
                     candidate[j] *= -1;
                 }
             }
-            population.add(new Individual(candidate, rnd));
+            population.add(new Individual(candidate));
         }
     }
 
@@ -207,7 +207,7 @@ public class Population
             children = recombination(parents);
 
             for (int j = 0; j < numParents; j++) {
-                offspring.add(new Individual(children[j], rnd));
+                offspring.add(new Individual(children[j]));
             }
         }
     }
@@ -228,7 +228,7 @@ public class Population
             children = recombination(parents);
 
             for (int j = 0; j < numParents; j++) {
-                offspring.add(new Individual(children[j], rnd));
+                offspring.add(new Individual(children[j]));
             }
         }
     }
@@ -351,7 +351,7 @@ public class Population
             //ind.mutate(Options.Mutation.UNCORRELATED_N);
         //}
         for (Individual ind: offspring) {
-            ind.mutate(options.mutation);
+            ind.mutate(options.mutation, rnd);
         }
     }
 

@@ -16,6 +16,8 @@ public class player50 implements ContestSubmission
     private int cycle;
     private String name;
     private Population population;
+    private IslandModel subPopulations;
+    private boolean islandModel;
     private Options options;
 
 
@@ -49,13 +51,12 @@ public class player50 implements ContestSubmission
 
         // Do sth with property values, e.g. specify relevant settings of your algorithm
         options = new Options();
+        islandModel = isMultimodal && !hasStructure;
 
         if (isMultimodal) {
-            options.parentSelection = Options.ParentSelection.EXPONENTIAL_RANKING;
-            populationSize = 1000;
             System.out.println("Function is Multimodal.");
+            populationSize = 1000;
             if (!hasStructure) {
-                options.setDeterministicCrowding();
                 populationSize *= 10;
             }
         }
@@ -74,30 +75,59 @@ public class player50 implements ContestSubmission
         int evals = evaluation_limit;
         //int evals = 2*populationSize;
 
-        // init population
-        population = new Population(populationSize, options, rnd);
-        // calculate fitness
-        evals -= population.evaluateInitialPopulation(evaluation);
+        // Create initial population and evaluate the fitness
+        if (islandModel) {
+            subPopulations = new IslandModel(populationSize, options, rnd);
+            evals -= subPopulations.evaluateInitialPopulation(evaluation);
+        } else {
+            population = new Population(populationSize, options, rnd);
+            evals -= population.evaluateInitialPopulation(evaluation);
+        }
 
         cycle = 0;
         while (evals > 0) {
-            // Select parents
-            population.selectParents();
+            if (islandModel) {
+                if (cycle % 10 == 0)
+                {
+                    subPopulations.exchangeIndividuals();
+                }
 
-            // Apply crossover / mutation operators
-            population.crossover();
-            population.mutate();
+                // Select parents
+                subPopulations.selectParents();
 
-            // Check fitness of unknown function
-            try {
-                evals -= population.evaluateOffspring(evaluation);
-            } catch (NullPointerException e) {
-                System.out.println("\033[1mEvaluation limit reached!\033[0m");
-                break;
+                // Apply crossover / mutation operators
+                subPopulations.crossover();
+                subPopulations.mutate();
+
+                // Check fitness of unknown function
+                try {
+                    evals -= subPopulations.evaluateOffspring(evaluation);
+                } catch (NullPointerException e) {
+                    System.out.println("\033[1mEvaluation limit reached!\033[0m");
+                    break;
+                }
+
+                // Select survivors
+                subPopulations.selectSurvivors();
+            } else {
+                // Select parents
+                population.selectParents();
+
+                // Apply crossover / mutation operators
+                population.crossover();
+                population.mutate();
+
+                // Check fitness of unknown function
+                try {
+                    evals -= population.evaluateOffspring(evaluation);
+                } catch (NullPointerException e) {
+                    System.out.println("\033[1mEvaluation limit reached!\033[0m");
+                    break;
+                }
+
+                // Select survivors
+                population.selectSurvivors();
             }
-
-            // Select survivors
-            population.selectSurvivors();
             cycle++;
         }
         System.out.println("Evolutionary Cycles: " + cycle);

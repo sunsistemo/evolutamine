@@ -3,6 +3,8 @@ public class Options
     static final double MUTATION_RATE = 0.1;
     static final double MUTATION_STEP_SIZE = 0.05;
 
+    static final int NUM_POPULATIONS = 10;
+
     public ParentSelection parentSelection;
     public Recombination recombination;
     public Mutation mutation;

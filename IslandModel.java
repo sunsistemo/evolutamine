@@ -80,10 +80,10 @@ public class IslandModel
 
     public void exchangeIndividuals()
     {
-        for (int i = 0; i < NUM_POPULATIONS; i++)
-        {
-            System.out.println("Population" + i + ".size()=" + populations[i].size());
-        }
+        //for (int i = 0; i < NUM_POPULATIONS; i++)
+        //{
+            //System.out.println("Population" + i + ".size()=" + populations[i].size());
+        //}
 
         int n = Options.NUM_EXCHANGES;
         for (int i = 0; i < NUM_POPULATIONS; i++)
@@ -102,9 +102,9 @@ public class IslandModel
             populations[i-1].addExchange(populations[neighbour].getSelectedForExchange());
         }
 
-        for (int i = 0; i < NUM_POPULATIONS; i++)
-        {
-            System.out.println("Population" + i + ".size()=" + populations[i].size());
-        }
+        //for (int i = 0; i < NUM_POPULATIONS; i++)
+        //{
+            //System.out.println("Population" + i + ".size()=" + populations[i].size());
+        //}
     }
 }

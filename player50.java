@@ -51,14 +51,11 @@ public class player50 implements ContestSubmission
 
         // Do sth with property values, e.g. specify relevant settings of your algorithm
         options = new Options();
-        islandModel = isMultimodal && !hasStructure;
+        islandModel = isMultimodal;
 
         if (isMultimodal) {
             System.out.println("Function is Multimodal.");
-            //populationSize = 1000;
-            if (!hasStructure) {
-                populationSize *= 10;
-            }
+            populationSize *= 10;
         }
         if (hasStructure) {
             System.out.println("Function has structure.");
@@ -86,12 +83,12 @@ public class player50 implements ContestSubmission
 
         cycle = 0;
         while (evals > 0) {
-            System.out.println("Evolutionary Cycle: " + cycle);
+            //System.out.println("Evolutionary Cycle: " + cycle);
             if (islandModel) {
                 if (cycle % 20 == 0)
                 {
                     //System.out.println("IslandModel: Exchange Individuals.");
-                    subPopulations.exchangeIndividuals();
+                    //subPopulations.exchangeIndividuals();
                 }
 
                 // Select parents

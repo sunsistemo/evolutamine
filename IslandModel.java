@@ -73,6 +73,9 @@ public class IslandModel
 
     public void exchangeIndividuals()
     {
+        for (int i = 0; i <= NUM_POPULATIONS; i++)
+        {
 
+        }
     }
 }

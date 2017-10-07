@@ -450,7 +450,43 @@ public class Population
      *
      */
 
-    // Sort the population based on fitness: high to low
+    /*
+     * Functions to select individuals for exchange in the Island Model (p.94-96)
+     */
+    public Individual[] getBest(int n)
+    {
+        Individual[] select = new Individual[n];
+        sortPopulation();
+        for (int i = 0; i < n; i++) {
+            select[i] = population.get(i);
+        }
+        return select;
+    }
+
+    public Individual[] pickFromFittestHalf(int n)
+    {
+        Individual[] select = new Individual[n];
+        sortPopulation();
+        for (int i = 0; i < n; i++) {
+            int r = rnd.nextInt(size/2);
+            select[i] = population.get(r);
+        }
+        return select;
+    }
+
+    public Individual[] getRandom(int n)
+    {
+        Individual[] select = new Individual[n];
+        for (int i = 0; i < n; i++) {
+            int r = rnd.nextInt(size);
+            select[i] = population.get(r);
+        }
+        return select;
+    }
+
+    /*
+     * Sort the population based on fitness: high to low
+     */
     private void sortPopulation()
     {
         /*
@@ -462,7 +498,18 @@ public class Population
         population.sort(Comparator.comparingDouble(Individual::fitness).reversed());
     }
 
-    // Calculates the distance between two individuals
+    /*
+     * Remove the n worst individuals from the population
+     */
+    public void removeWorst(int n)
+    {
+        sortPopulation();
+        population.subList(size-n, size).clear();
+    }
+
+    /*
+     * Calculates the distance between two individuals
+     */
     private double distance(Individual a, Individual b)
     {
         double d = 0.0;

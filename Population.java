@@ -365,7 +365,7 @@ public class Population
         int lambda = offspringSize;
         population.addAll(offspring);
         sortPopulation();
-        population.subList(mu, mu+lamda).clear(); // Keep the best μ
+        population.subList(mu, mu+lambda).clear(); // Keep the best μ
     }
 
     private void distanceTournamentSelection()

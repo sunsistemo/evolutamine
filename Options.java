@@ -3,7 +3,7 @@ public class Options
     static final double MUTATION_RATE = 0.1;
     static final double MUTATION_STEP_SIZE = 0.05;
 
-    static final int NUM_POPULATIONS = 10;
+    static int subPopulations;
     static final int NUM_EXCHANGES = 5;
 
     public ParentSelection parentSelection;
@@ -36,6 +36,7 @@ public class Options
     public Options()
     {
         crowding = false;
+        subPopulations = 1;
         parentSelection = ParentSelection.LINEAR_RANKING;
         recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
@@ -45,7 +46,7 @@ public class Options
     public void setDeterministicCrowding()
     {
         crowding = true;
-        parentSelection = ParentSelection.RANDOM_PAIRING;;
+        parentSelection = ParentSelection.RANDOM_PAIRING;
         survivorSelection = SurvivorSelection.DISTANCE_TOURNAMENT;
     }
 }

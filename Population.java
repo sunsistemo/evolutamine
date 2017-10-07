@@ -173,10 +173,6 @@ public class Population
         int i = 0;
         double cumProbability = 0.0;
         while (matingPool.size() < offspringSize) {
-            //System.out.print("Matingpool size: " + matingPool.size());
-            //System.out.print(" Offspring size: " + offspringSize);
-            //System.out.print(" Population size: " + population.size());
-            //System.out.println();
             cumProbability += population.get(i).probability;
 
             while (r <= cumProbability) {

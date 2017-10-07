@@ -51,20 +51,29 @@ public class player50 implements ContestSubmission
 
         // Do sth with property values, e.g. specify relevant settings of your algorithm
         options = new Options();
-        islandModel = isMultimodal;
-
         if (isMultimodal) {
             System.out.println("Function is Multimodal.");
-            populationSize *= 10;
+
+            populationSize = 1000;
+            if (!hasStructure) {
+                Options.subPopulations = 20;
+            }
         }
+
         if (hasStructure) {
             System.out.println("Function has structure.");
+            Options.subPopulations = 2;
         }
         if (isSeparable) {
             System.out.println("Function is separable.");
         }
+        islandModel = isMultimodal && (Options.subPopulations > 1);
 
         System.out.println("Population size: " + populationSize);
+        if (islandModel) {
+            System.out.println("Subpopulations: " + Options.subPopulations);
+            System.out.println("Subpopulation size: " + (populationSize / Options.subPopulations));
+        }
     }
 
     public void run()

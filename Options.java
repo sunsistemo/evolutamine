@@ -4,6 +4,7 @@ public class Options
     static final double MUTATION_STEP_SIZE = 0.05;
 
     static final int NUM_POPULATIONS = 10;
+    static final int NUM_EXCHANGES = 5;
 
     public ParentSelection parentSelection;
     public Recombination recombination;

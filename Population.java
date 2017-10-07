@@ -21,7 +21,7 @@ public class Population
     private final int numParents = 2;
     private Random rnd;
     private Options options;
-
+    private Individual[] exchange;
 
     public Population(int size, Options options, Random rnd)
     {
@@ -173,6 +173,10 @@ public class Population
         int i = 0;
         double cumProbability = 0.0;
         while (matingPool.size() < offspringSize) {
+            //System.out.print("Matingpool size: " + matingPool.size());
+            //System.out.print(" Offspring size: " + offspringSize);
+            //System.out.print(" Population size: " + population.size());
+            //System.out.println();
             cumProbability += population.get(i).probability;
 
             while (r <= cumProbability) {
@@ -453,35 +457,44 @@ public class Population
     /*
      * Functions to select individuals for exchange in the Island Model (p.94-96)
      */
-    public Individual[] getBest(int n)
+    public void selectBest(int n)
     {
-        Individual[] select = new Individual[n];
+        exchange = new Individual[n];
         sortPopulation();
         for (int i = 0; i < n; i++) {
-            select[i] = population.get(i);
+            exchange[i] = population.get(i);
         }
-        return select;
     }
 
-    public Individual[] pickFromFittestHalf(int n)
+    public void selectFromFittestHalf(int n)
     {
-        Individual[] select = new Individual[n];
+        exchange = new Individual[n];
         sortPopulation();
         for (int i = 0; i < n; i++) {
             int r = rnd.nextInt(size/2);
-            select[i] = population.get(r);
+            exchange[i] = population.get(r);
         }
-        return select;
     }
 
-    public Individual[] getRandom(int n)
+    public void selectRandom(int n)
     {
-        Individual[] select = new Individual[n];
+        exchange = new Individual[n];
         for (int i = 0; i < n; i++) {
             int r = rnd.nextInt(size);
-            select[i] = population.get(r);
+            exchange[i] = population.get(r);
         }
-        return select;
+    }
+
+    public Individual[] getSelectedForExchange()
+    {
+        return exchange;
+    }
+
+    public void addExchange(Individual[] individuals)
+    {
+        for (Individual ind: individuals) {
+            population.add(ind);
+        }
     }
 
     /*
@@ -518,6 +531,11 @@ public class Population
             d += Math.abs(a.value[i] - b.value[i]);
         }
         return d / a.value.length;
+    }
+
+    public int size()
+    {
+        return size;
     }
 
     /*

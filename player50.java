@@ -55,7 +55,7 @@ public class player50 implements ContestSubmission
 
         if (isMultimodal) {
             System.out.println("Function is Multimodal.");
-            populationSize = 1000;
+            //populationSize = 1000;
             if (!hasStructure) {
                 populationSize *= 10;
             }
@@ -86,9 +86,11 @@ public class player50 implements ContestSubmission
 
         cycle = 0;
         while (evals > 0) {
+            System.out.println("Evolutionary Cycle: " + cycle);
             if (islandModel) {
-                if (cycle % 10 == 0)
+                if (cycle % 20 == 0)
                 {
+                    //System.out.println("IslandModel: Exchange Individuals.");
                     subPopulations.exchangeIndividuals();
                 }
 

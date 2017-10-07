@@ -13,6 +13,13 @@ public class IslandModel
         NUM_POPULATIONS = opt.NUM_POPULATIONS;
         populations = new Population[NUM_POPULATIONS];
         int subPopulationSize = populationSize / NUM_POPULATIONS;
+
+        System.out.println();
+        System.out.println("Population size: " + populationSize);
+        System.out.println("Subpopulations: " + NUM_POPULATIONS);
+        System.out.println("Subpopulation size: " + subPopulationSize);
+        System.out.println();
+
         for (int i = 0; i < NUM_POPULATIONS; i++)
         {
             populations[i] = new Population(subPopulationSize, opt, rnd);
@@ -73,9 +80,31 @@ public class IslandModel
 
     public void exchangeIndividuals()
     {
-        for (int i = 0; i <= NUM_POPULATIONS; i++)
+        for (int i = 0; i < NUM_POPULATIONS; i++)
         {
+            System.out.println("Population" + i + ".size()=" + populations[i].size());
+        }
 
+        int n = Options.NUM_EXCHANGES;
+        for (int i = 0; i < NUM_POPULATIONS; i++)
+        {
+            populations[i].selectRandom(n);
+            populations[i].removeWorst(n);
+        }
+
+        for (int i = 1; i <= NUM_POPULATIONS; i++)
+        {
+            int neighbour = i;
+            if (i == NUM_POPULATIONS) {
+                neighbour = 0;
+            }
+            //System.out.println("Population " + (i-1) + " adds selected from population " + neighbour);
+            populations[i-1].addExchange(populations[neighbour].getSelectedForExchange());
+        }
+
+        for (int i = 0; i < NUM_POPULATIONS; i++)
+        {
+            System.out.println("Population" + i + ".size()=" + populations[i].size());
         }
     }
 }

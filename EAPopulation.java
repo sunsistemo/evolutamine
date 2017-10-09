@@ -13,4 +13,6 @@ public interface EAPopulation
     public int evaluateOffspring(ContestEvaluation evaluation);
 
     public void selectSurvivors();
+
+    public void exchangeIndividuals();
 }

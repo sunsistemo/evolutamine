@@ -483,7 +483,12 @@ public class Population implements EAPopulation
 
     public Individual[] getSelectedForExchange()
     {
-        return exchange;
+        Individual[] tmp = new Individual[exchange.length];
+        for (int i = 0; i < exchange.length; i++)
+        {
+            tmp[i] = new Individual(exchange[i].value);
+        }
+        return tmp;
     }
 
     public void addExchange(Individual[] individuals)
@@ -532,6 +537,14 @@ public class Population implements EAPopulation
     public int size()
     {
         return size;
+    }
+
+    /*
+     * Dummy function
+     */
+    public void exchangeIndividuals()
+    {
+
     }
 
     /*

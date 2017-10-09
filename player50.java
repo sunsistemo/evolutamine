@@ -55,13 +55,13 @@ public class player50 implements ContestSubmission
 
             populationSize = 1000;
             if (!hasStructure) {
-                Options.subPopulations = 20;
+                Options.subPopulations = 10;
             }
         }
 
         if (hasStructure) {
             System.out.println("Function has structure.");
-            Options.subPopulations = 2;
+            Options.subPopulations = 4;
         }
         if (isSeparable) {
             System.out.println("Function is separable.");
@@ -89,11 +89,12 @@ public class player50 implements ContestSubmission
         evals -= population.evaluateInitialPopulation(evaluation);
 
         cycle = 0;
+
         while (evals > 0) {
             if (islandModel) {
-                if (cycle % 25 == 0) {
-                    //System.out.println("IslandModel: Exchange Individuals.");
-                    //population.exchangeIndividuals();
+                if (cycle % 50 == 0) {
+                    System.out.println("IslandModel: cycle " + cycle + " --> Exchange Individuals.");
+                    population.exchangeIndividuals();
                 }
             }
 

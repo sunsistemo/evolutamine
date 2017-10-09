@@ -69,7 +69,7 @@ public class IslandModel implements EAPopulation
     {
         int n = Options.NUM_EXCHANGES;
         for (int i = 0; i < NUM_POPULATIONS; i++) {
-            populations[i].selectRandom(n);
+            populations[i].selectBest(n);
             populations[i].removeWorst(n);
         }
 

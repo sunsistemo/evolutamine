@@ -55,7 +55,7 @@ public class player50 implements ContestSubmission
 
             populationSize = 1000;
             if (!hasStructure) {
-                Options.subPopulations = 10;
+                Options.subPopulations = 20;
             }
         }
 
@@ -68,11 +68,12 @@ public class player50 implements ContestSubmission
         }
         islandModel = isMultimodal && (Options.subPopulations > 1);
 
-        System.out.println("Population size: " + populationSize);
+        System.out.print("Population size: " + populationSize);
         if (islandModel) {
-            System.out.println("Subpopulations: " + Options.subPopulations);
-            System.out.println("Subpopulation size: " + (populationSize / Options.subPopulations));
+            System.out.print(" (" + Options.subPopulations + " subpopulations of size ");
+            System.out.print((populationSize / Options.subPopulations) + ")");
         }
+        System.out.println();
     }
 
     public void run()
@@ -92,8 +93,7 @@ public class player50 implements ContestSubmission
 
         while (evals > 0) {
             if (islandModel) {
-                if (cycle % 50 == 0) {
-                    System.out.println("IslandModel: cycle " + cycle + " --> Exchange Individuals.");
+                if (cycle % 25 == 0) {
                     ((IslandModel) population).exchangeIndividuals();
                 }
             }

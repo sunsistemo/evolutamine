@@ -3,7 +3,7 @@ import java.util.Random;
 import org.vu.contest.ContestEvaluation;
 
 
-public class IslandModel
+public class IslandModel implements EAPopulation
 {
     private Population[] populations;
     private final int NUM_POPULATIONS;

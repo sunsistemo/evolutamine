@@ -9,7 +9,7 @@ import java.util.Random;
 import org.vu.contest.ContestEvaluation;
 
 
-public class Population
+public class Population implements EAPopulation
 {
     private int size;
     private double offspringRatio;

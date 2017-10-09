@@ -540,14 +540,6 @@ public class Population implements EAPopulation
     }
 
     /*
-     * Dummy function
-     */
-    public void exchangeIndividuals()
-    {
-
-    }
-
-    /*
      * Print functions
      */
     public void print()

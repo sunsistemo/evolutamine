@@ -94,7 +94,7 @@ public class player50 implements ContestSubmission
             if (islandModel) {
                 if (cycle % 50 == 0) {
                     System.out.println("IslandModel: cycle " + cycle + " --> Exchange Individuals.");
-                    population.exchangeIndividuals();
+                    ((IslandModel) population).exchangeIndividuals();
                 }
             }
 

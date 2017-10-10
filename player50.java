@@ -69,9 +69,18 @@ public class player50 implements ContestSubmission
             int subPopulations = 10;
             int exchangeRound = 50;
             options.islandModel(subPopulations, exchangeRound);
+
+            double tau = 0.02;
+            double tau2 = 2;
+            double epsilon = 0.001;
+            options.mutationParameters(tau, tau2, epsilon);
         }
         if (schaffers) {
             populationSize = 1000;
+            double tau = 0.02;
+            double tau2 = 3;
+            double epsilon = 0.001;
+            options.mutationParameters(tau, tau2, epsilon);
         }
 
         // print population size settings

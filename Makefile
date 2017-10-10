@@ -4,7 +4,7 @@
 
 SHELL=/bin/bash
 JC=javac
-JCFLAGS=-cp contest.jar
+JCFLAGS=-cp contest.jar:commons-math3-3.6.1.jar
 PLAYER=player50
 
 SOURCES=$(PLAYER).java $(filter-out $(PLAYER).java, $(wildcard *.java))

@@ -1,6 +1,8 @@
 import java.lang.Math;
 import java.util.Random;
 
+import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+
 
 public class Individual
 {
@@ -9,6 +11,7 @@ public class Individual
     public double probability;
     public int rank;
     private double[] sigma;
+    private double[] alpha;
     private final double UB = 5.0;
     private final double LB = -UB;
     private boolean evaluated;
@@ -104,8 +107,8 @@ public class Individual
 
     private void uncorrelatedMutationWithNStepSizes(Random rnd)
     {
-        double tau = 0.05;    // local learning rate
-        double tau2 = 0.9;   // global learning rate
+        double tau = 0.05;    // local learning rate (τ)
+        double tau2 = 0.9;   // global learning rate (τ')
         double epsilon = 0.001;
         double gamma = tau2 * rnd.nextGaussian();
 
@@ -119,7 +122,36 @@ public class Individual
 
     private void correlatedMutation(Random rnd)
     {
+        double beta = 5;
+        int n = value.length;
+        int sign;
+        double n_alpha = n * (n - 1) / 2;
+        double tau = 0.05;    // local learning rate
+        double tau2 = 0.9;   // global learning rate
+        double epsilon = 0.001;
+        double gamma = tau2 * rnd.nextGaussian();
 
+        alpha = new double[n_alpha];
+
+        for (int i = 0; i < n; i++) {
+            double g = rnd.nextGaussian();
+            sigma[i] *= Math.exp(gamma + tau * g);
+            sigma[i] = Math.max(sigma[i], epsilon);
+
+            for (int j = 0; j < n_alpha; j++) {
+                alpha[j] += beta * rnd.nextGaussian();
+                if (Math.abs(alpha[j]) > Math.PI) {
+                    if (alpha[j] >= 0) {
+                        sign = 1;
+                    } else {
+                        sign = -1;
+                    }
+                    alpha[j] = alpha[j] - 2 * Math.PI * sign;
+                }
+            }
+            // TODO: figure out the covariance matrix p. 61
+            value[i] = boundedAdd(value[i], sigma[i] * g);
+        }
     }
 
     // check to ensure v stays in domain of function

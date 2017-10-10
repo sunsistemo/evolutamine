@@ -59,6 +59,10 @@ public class player50 implements ContestSubmission
         options = new Options();
         if (bentCigar) {
             populationSize = 50;
+            double tau = 0.025;
+            double tau2 = 5;
+            double epsilon = 0.000001;
+            options.mutationParameters(tau, tau2, epsilon);
         }
         if (katsuura) {
             populationSize = 500;

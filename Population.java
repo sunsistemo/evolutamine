@@ -69,10 +69,8 @@ public class Population implements EAPopulation
     {
         int evals = 0;
         for (Individual parent: population) {
-            if (!parent.evaluated()) {
-                parent.setFitness((double) evaluation.evaluate(parent.value));
-                evals++;
-            }
+            parent.setFitness((double) evaluation.evaluate(parent.value));
+            evals++;
         }
         return evals; // return number of evaluations performed
     }
@@ -81,10 +79,8 @@ public class Population implements EAPopulation
     {
         int evals = 0;
         for (Individual child: offspring) {
-            if (!child.evaluated()) {
-                child.setFitness((double) evaluation.evaluate(child.value));
-                evals++;
-            }
+            child.setFitness((double) evaluation.evaluate(child.value));
+            evals++;
         }
         return evals; // return number of evaluations performed
     }

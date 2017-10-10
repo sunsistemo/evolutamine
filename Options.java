@@ -16,6 +16,10 @@ public class Options
     boolean fitnessSharing;
     boolean islandModel;
 
+    static double tau;
+    static double tau2;
+    static double epsilon;
+
     public enum ParentSelection
     {
         FPS, LINEAR_RANKING, EXPONENTIAL_RANKING, RANDOM_PAIRING;
@@ -47,6 +51,9 @@ public class Options
         recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
         survivorSelection = SurvivorSelection.MU_PLUS_LAMBDA;
+        tau = 0.025;
+        tau2 = 5;
+        epsilon = 0.001;
     }
 
     public Options(Options opt)
@@ -62,6 +69,10 @@ public class Options
         this.recombination = opt.recombination;
         this.mutation = opt.mutation;
         this.survivorSelection = opt.survivorSelection;
+
+        this.tau = opt.tau;
+        this.tau2 = opt.tau2;
+        this.epsilon = opt.epsilon;
     }
 
     public void islandModel(int subPopulations, int exchangeRound)
@@ -88,5 +99,12 @@ public class Options
         islandModel = false;
         parentSelection = ParentSelection.RANDOM_PAIRING;
         survivorSelection = SurvivorSelection.DISTANCE_TOURNAMENT;
+    }
+
+    public void mutationParameters(double localTau, double globalTau, double epsilon)
+    {
+        this.tau = localTau;
+        this.tau2 = globalTau;
+        this.epsilon = epsilon;
     }
 }

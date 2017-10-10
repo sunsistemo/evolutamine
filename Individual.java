@@ -14,7 +14,6 @@ public class Individual
     private double[] alpha;
     private final double UB = 5.0;
     private final double LB = -UB;
-    private boolean evaluated;
 
 
     public Individual(double[] value)
@@ -28,8 +27,6 @@ public class Individual
         for (int i = 0; i < value.length; i++) {
             sigma[i] = Options.MUTATION_STEP_SIZE;
         }
-
-        evaluated = false;
     }
 
     public double fitness()
@@ -40,12 +37,6 @@ public class Individual
     public void setFitness(double fitness)
     {
         this.fitness = fitness;
-        this.evaluated = true;
-    }
-
-    public boolean evaluated()
-    {
-        return this.evaluated;
     }
 
     public void mutate(Options.Mutation method, Random rnd)
@@ -67,7 +58,6 @@ public class Individual
                 correlatedMutation(rnd);
                 break;
         }
-        evaluated = false;
     }
 
     private void uniformMutation(Random rnd)
@@ -107,9 +97,9 @@ public class Individual
 
     private void uncorrelatedMutationWithNStepSizes(Random rnd)
     {
-        double tau = 0.025;    // local learning rate (τ)
-        double tau2 = 5;      // global learning rate (τ')
-        double epsilon = 0.000001;
+        double tau = Options.tau;     // local learning rate (τ)
+        double tau2 = Options.tau2;  // global learning rate (τ')
+        double epsilon = Options.epsilon;
 
         double gamma = tau2 * rnd.nextGaussian();
 

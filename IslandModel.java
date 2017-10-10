@@ -14,14 +14,14 @@ public class IslandModel implements EAPopulation
         populations = new Population[NUM_POPULATIONS];
         int subPopulationSize = populationSize / NUM_POPULATIONS;
 
+        Options islandOptions = new Options(opt);
         for (int i = 0; i < NUM_POPULATIONS; i++) {
             if (i % 2 == 0) {
-                opt.parentSelection = Options.ParentSelection.EXPONENTIAL_RANKING;
+                islandOptions.parentSelection = Options.ParentSelection.EXPONENTIAL_RANKING;
             } else {
-                opt.parentSelection = Options.ParentSelection.LINEAR_RANKING;
+                islandOptions.parentSelection = Options.ParentSelection.LINEAR_RANKING;
             }
-
-            populations[i] = new Population(subPopulationSize, new Options(opt), rnd);
+            populations[i] = new Population(subPopulationSize, new Options(islandOptions), rnd);
         }
     }
 

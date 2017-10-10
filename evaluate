@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+import argparse
+import re
+from subprocess import PIPE, run
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-n", help="number of times to run", type=int, default=3)
+parser.add_argument("-b", help="evaluate BentCigarFunction", action="store_true")
+parser.add_argument("-k", help="evaluate KatsuuraEvaluation", action="store_true")
+parser.add_argument("-s", help="evaluate SchaffersEvaluation", action="store_true")
+parser.add_argument("-a", help="test all functions", action="store_true")
+args = parser.parse_args()
+
+def main():
+    functions = ["BentCigarFunction", "KatsuuraEvaluation", "SchaffersEvaluation"]
+
+    function = None
+    if args.b:
+        function = functions[0]
+    elif args.k:
+        function = functions[1]
+    elif args.s:
+        function = functions[2]
+
+    if function is not None:
+        score = get_score(function, args.n)
+        print("Average of {}: {}".format(args.n, score))
+        return
+
+    if args.a:
+        function = functions
+        bent = get_score(functions[0], args.n)
+        katsuura = get_score(functions[1], args.n)
+        schaffers = get_score(functions[2], args.n)
+        print("BentCigarFunction   - average of {}: {}".format(args.n, bent))
+        print("KatsuuraEvaluation  - average of {}: {}".format(args.n, katsuura))
+        print("SchaffersEvaluation - average of {}: {}".format(args.n, schaffers))
+        return
+
+
+def get_score(function: str, n: int):
+        scores = 0.
+        for i in range(n):
+            output = run("make run FUNC={}".format(function).split(), stdout=PIPE).stdout.decode("utf-8")
+            print(output)
+            start = output.find("Score: ")
+            score = re.match("\d\.\d+", output[start + 7:])
+            score = float(score.group())
+            scores += score
+        return scores / n
+
+
+if __name__ == "__main__":
+    main()

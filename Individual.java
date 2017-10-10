@@ -64,6 +64,7 @@ public class Individual
                 correlatedMutation(rnd);
                 break;
         }
+        evaluated = false;
     }
 
     private void uniformMutation(Random rnd)

@@ -15,7 +15,13 @@ public class IslandModel implements EAPopulation
         int subPopulationSize = populationSize / NUM_POPULATIONS;
 
         for (int i = 0; i < NUM_POPULATIONS; i++) {
-            populations[i] = new Population(subPopulationSize, opt, rnd);
+            if (i % 2 == 0) {
+                opt.parentSelection = Options.ParentSelection.EXPONENTIAL_RANKING;
+            } else {
+                opt.parentSelection = Options.ParentSelection.LINEAR_RANKING;
+            }
+
+            populations[i] = new Population(subPopulationSize, new Options(opt), rnd);
         }
     }
 

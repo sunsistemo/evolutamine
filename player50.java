@@ -68,12 +68,11 @@ public class player50 implements ContestSubmission
         }
         if (schaffers) {
             populationSize = 1000;
-            //options.fitnessSharing();
         }
 
         // print population size settings
         System.out.print("Population size: " + populationSize);
-        if (islandModel) {
+        if (options.islandModel) {
             System.out.print(" (" + options.subPopulations + " subpopulations of size ");
             System.out.print((populationSize / options.subPopulations) + ")");
         }

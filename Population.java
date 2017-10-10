@@ -129,20 +129,19 @@ public class Population implements EAPopulation
     // Multimodality: Fitness Sharing
     private void applyFitnessSharing()
     {
-        double fitness;
         double sumSharing;
 
         for (int i = 0; i < size; i++) {
             sumSharing = 0.0;
             for (int j = 0; j < size; j++)
             {
-                sumSharing += distance(population.get(i), population.get(j));
+                sumSharing += sharing(distance(population.get(i), population.get(j)));
             }
             population.get(i).setFitness(population.get(i).fitness / sumSharing);
         }
     }
 
-    private double sh(double distance)
+    private double sharing(double distance)
     {
         int alpha = 1;
         double share = 5.0;
@@ -560,7 +559,7 @@ public class Population implements EAPopulation
         for (int i = 0; i < a.value.length; i++) {
             d += Math.abs(a.value[i] - b.value[i]);
         }
-        return d;
+        return d / a.value.length;
     }
 
     public int size()

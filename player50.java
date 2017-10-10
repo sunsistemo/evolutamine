@@ -24,7 +24,7 @@ public class player50 implements ContestSubmission
     {
         name = "evolutamine";
         rnd = new Random();
-        populationSize = 100;
+        populationSize = 50;
     }
 
     public void setSeed(long seed)
@@ -53,15 +53,16 @@ public class player50 implements ContestSubmission
         if (isMultimodal) {
             System.out.println("Function is Multimodal.");
 
-            populationSize = 1000;
+            populationSize = 500;
             if (!hasStructure) {
-                Options.subPopulations = 20;
+                Options.subPopulations = 10;
             }
         }
 
         if (hasStructure) {
             System.out.println("Function has structure.");
-            Options.subPopulations = 4;
+            Options.subPopulations = 1;
+            populationSize = 1000;
         }
         if (isSeparable) {
             System.out.println("Function is separable.");
@@ -93,7 +94,7 @@ public class player50 implements ContestSubmission
 
         while (evals > 0) {
             if (islandModel) {
-                if (cycle % 25 == 0) {
+                if (cycle % 50 == 0) {
                     ((IslandModel) population).exchangeIndividuals();
                 }
             }

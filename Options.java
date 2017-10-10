@@ -43,6 +43,16 @@ public class Options
         survivorSelection = SurvivorSelection.MU_PLUS_LAMBDA;
     }
 
+    public Options(Options opt)
+    {
+        this.crowding = opt.crowding;
+        this.subPopulations = opt.subPopulations;
+        this.parentSelection = opt.parentSelection;
+        this.recombination = opt.recombination;
+        this.mutation = opt.mutation;
+        this.survivorSelection = opt.survivorSelection;
+    }
+
     public void setDeterministicCrowding()
     {
         crowding = true;

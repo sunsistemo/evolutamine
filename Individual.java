@@ -107,9 +107,10 @@ public class Individual
 
     private void uncorrelatedMutationWithNStepSizes(Random rnd)
     {
-        double tau = 0.05;    // local learning rate (τ)
-        double tau2 = 0.9;   // global learning rate (τ')
-        double epsilon = 0.001;
+        double tau = 0.025;    // local learning rate (τ)
+        double tau2 = 5;      // global learning rate (τ')
+        double epsilon = 0.000001;
+
         double gamma = tau2 * rnd.nextGaussian();
 
         for (int i = 0; i < value.length; i++) {

@@ -16,7 +16,6 @@ public class player50 implements ContestSubmission
     private int cycle;
     private String name;
     private EAPopulation population;
-    private boolean islandModel;
     private Options options;
 
 
@@ -65,10 +64,11 @@ public class player50 implements ContestSubmission
             populationSize = 500;
             int subPopulations = 10;
             int exchangeRound = 50;
-            options.setIslandModel(subPopulations, exchangeRound);
+            options.islandModel(subPopulations, exchangeRound);
         }
         if (schaffers) {
             populationSize = 1000;
+            //options.fitnessSharing();
         }
 
         // print population size settings

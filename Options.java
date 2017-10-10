@@ -13,6 +13,7 @@ public class Options
     public SurvivorSelection survivorSelection;
 
     boolean crowding;
+    boolean fitnessSharing;
     boolean islandModel;
 
     public enum ParentSelection
@@ -38,6 +39,7 @@ public class Options
     public Options()
     {
         crowding = false;
+        fitnessSharing = false;
         islandModel = false;
         subPopulations = 1;
         exchangeRound = 0;
@@ -50,26 +52,41 @@ public class Options
     public Options(Options opt)
     {
         this.crowding = opt.crowding;
+        this.fitnessSharing = opt.fitnessSharing;
         this.islandModel = opt.islandModel;
+
         this.subPopulations = opt.subPopulations;
         this.exchangeRound = opt.exchangeRound;
+
         this.parentSelection = opt.parentSelection;
         this.recombination = opt.recombination;
         this.mutation = opt.mutation;
         this.survivorSelection = opt.survivorSelection;
     }
 
-    public void setDeterministicCrowding()
-    {
-        crowding = true;
-        parentSelection = ParentSelection.RANDOM_PAIRING;
-        survivorSelection = SurvivorSelection.DISTANCE_TOURNAMENT;
-    }
-
-    public void setIslandModel(int subPopulations, int exchangeRound)
+    public void islandModel(int subPopulations, int exchangeRound)
     {
         islandModel = true;
+        crowding = false;
+        fitnessSharing = false;
         this.subPopulations = subPopulations;
         this.exchangeRound = exchangeRound;
+    }
+
+    public void fitnessSharing()
+    {
+        fitnessSharing = true;
+        crowding = false;
+        islandModel = false;
+        parentSelection = ParentSelection.FPS;
+    }
+
+    public void deterministicCrowding()
+    {
+        crowding = true;
+        fitnessSharing = false;
+        islandModel = false;
+        parentSelection = ParentSelection.RANDOM_PAIRING;
+        survivorSelection = SurvivorSelection.DISTANCE_TOURNAMENT;
     }
 }

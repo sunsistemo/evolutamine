@@ -4,6 +4,7 @@ public class Options
     static final double MUTATION_STEP_SIZE = 0.05;
 
     static int subPopulations;
+    static int exchangeRound;
     static final int NUM_EXCHANGES = 5;
 
     public ParentSelection parentSelection;
@@ -12,6 +13,7 @@ public class Options
     public SurvivorSelection survivorSelection;
 
     boolean crowding;
+    boolean islandModel;
 
     public enum ParentSelection
     {
@@ -36,7 +38,9 @@ public class Options
     public Options()
     {
         crowding = false;
+        islandModel = false;
         subPopulations = 1;
+        exchangeRound = 0;
         parentSelection = ParentSelection.LINEAR_RANKING;
         recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
@@ -46,7 +50,9 @@ public class Options
     public Options(Options opt)
     {
         this.crowding = opt.crowding;
+        this.islandModel = opt.islandModel;
         this.subPopulations = opt.subPopulations;
+        this.exchangeRound = opt.exchangeRound;
         this.parentSelection = opt.parentSelection;
         this.recombination = opt.recombination;
         this.mutation = opt.mutation;
@@ -58,5 +64,12 @@ public class Options
         crowding = true;
         parentSelection = ParentSelection.RANDOM_PAIRING;
         survivorSelection = SurvivorSelection.DISTANCE_TOURNAMENT;
+    }
+
+    public void setIslandModel(int subPopulations, int exchangeRound)
+    {
+        islandModel = true;
+        this.subPopulations = subPopulations;
+        this.exchangeRound = exchangeRound;
     }
 }

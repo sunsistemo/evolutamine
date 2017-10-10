@@ -48,31 +48,34 @@ public class player50 implements ContestSubmission
         boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
         boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
 
+        if (isMultimodal) { System.out.println("Function is Multimodal."); }
+        if (hasStructure) { System.out.println("Function has structure."); }
+        if (isSeparable) { System.out.println("Function is separable."); }
+
+        boolean bentCigar = !(isMultimodal || hasStructure || isSeparable);
+        boolean katsuura  = isMultimodal && !(hasStructure || isSeparable);
+        boolean schaffers = isMultimodal && hasStructure && !isSeparable;
         // Do sth with property values, e.g. specify relevant settings of your algorithm
+
         options = new Options();
-        if (isMultimodal) {
-            System.out.println("Function is Multimodal.");
-
-            populationSize = 500;
-            if (!hasStructure) {
-                Options.subPopulations = 10;
-            }
+        if (bentCigar) {
+            populationSize = 50;
         }
-
-        if (hasStructure) {
-            System.out.println("Function has structure.");
-            Options.subPopulations = 1;
+        if (katsuura) {
+            populationSize = 500;
+            int subPopulations = 10;
+            int exchangeRound = 50;
+            options.setIslandModel(subPopulations, exchangeRound);
+        }
+        if (schaffers) {
             populationSize = 1000;
         }
-        if (isSeparable) {
-            System.out.println("Function is separable.");
-        }
-        islandModel = isMultimodal && (Options.subPopulations > 1);
 
+        // print population size settings
         System.out.print("Population size: " + populationSize);
         if (islandModel) {
-            System.out.print(" (" + Options.subPopulations + " subpopulations of size ");
-            System.out.print((populationSize / Options.subPopulations) + ")");
+            System.out.print(" (" + options.subPopulations + " subpopulations of size ");
+            System.out.print((populationSize / options.subPopulations) + ")");
         }
         System.out.println();
     }
@@ -83,18 +86,17 @@ public class player50 implements ContestSubmission
         //int evals = 2*populationSize;
 
         // Create initial population and evaluate the fitness
-        if (islandModel) {
-            population = new IslandModel(populationSize, options, rnd);
+        if (options.islandModel) {
+            population = new IslandModel(populationSize, new Options(options), rnd);
         } else {
-            population = new Population(populationSize, options, rnd);
+            population = new Population(populationSize, new Options(options), rnd);
         }
         evals -= population.evaluateInitialPopulation(evaluation);
 
         cycle = 0;
-
         while (evals > 0) {
-            if (islandModel) {
-                if (cycle % 50 == 0) {
+            if (options.islandModel) {
+                if (cycle % options.exchangeRound == 0) {
                     ((IslandModel) population).exchangeIndividuals();
                 }
             }

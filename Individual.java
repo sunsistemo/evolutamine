@@ -125,7 +125,7 @@ public class Individual
         double beta = 5;
         int n = value.length;
         int sign;
-        double n_alpha = n * (n - 1) / 2;
+        int n_alpha = (int) n * (n - 1) / 2;
         double tau = 0.05;    // local learning rate
         double tau2 = 0.9;   // global learning rate
         double epsilon = 0.001;

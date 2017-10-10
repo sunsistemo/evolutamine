@@ -12,6 +12,7 @@ public class Options
     public SurvivorSelection survivorSelection;
 
     boolean crowding;
+    boolean fitnessSharing;
 
     public enum ParentSelection
     {
@@ -36,7 +37,9 @@ public class Options
     public Options()
     {
         crowding = false;
+        fitnessSharing = false;
         subPopulations = 1;
+
         parentSelection = ParentSelection.LINEAR_RANKING;
         recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
@@ -46,6 +49,7 @@ public class Options
     public Options(Options opt)
     {
         this.crowding = opt.crowding;
+        this.fitnessSharing = opt.fitnessSharing;
         this.subPopulations = opt.subPopulations;
         this.parentSelection = opt.parentSelection;
         this.recombination = opt.recombination;
@@ -53,10 +57,19 @@ public class Options
         this.survivorSelection = opt.survivorSelection;
     }
 
-    public void setDeterministicCrowding()
+    public void deterministicCrowding()
     {
         crowding = true;
+        fitnessSharing = false;
+
         parentSelection = ParentSelection.RANDOM_PAIRING;
         survivorSelection = SurvivorSelection.DISTANCE_TOURNAMENT;
+    }
+
+    public void fitnessSharing()
+    {
+        fitnessSharing = true;
+        crowding = false;
+        parentSelection = ParentSelection.FPS;
     }
 }

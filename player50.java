@@ -55,7 +55,8 @@ public class player50 implements ContestSubmission
 
             populationSize = 500;
             if (!hasStructure) {
-                Options.subPopulations = 10;
+                Options.subPopulations = 1;
+                options.fitnessSharing();
             }
         }
 
@@ -63,6 +64,7 @@ public class player50 implements ContestSubmission
             System.out.println("Function has structure.");
             Options.subPopulations = 1;
             populationSize = 1000;
+            //options.fitnessSharing();
         }
         if (isSeparable) {
             System.out.println("Function is separable.");

@@ -105,6 +105,9 @@ public class Population implements EAPopulation
                 rankingSelection();
                 break;
             case FPS:
+                if (options.fitnessSharing) {
+                    applyFitnessSharing();
+                }
                 fitnessProportionalSelection();
                 break;
         }
@@ -122,6 +125,34 @@ public class Population implements EAPopulation
         }
         sampleParents();
     }
+
+    // Multimodality: Fitness Sharing
+    private void applyFitnessSharing()
+    {
+        double fitness;
+        double sumSharing;
+
+        for (int i = 0; i < size; i++) {
+            sumSharing = 0.0;
+            for (int j = 0; j < size; j++)
+            {
+                sumSharing += distance(population.get(i), population.get(j));
+            }
+            population.get(i).setFitness(population.get(i).fitness / sumSharing);
+        }
+    }
+
+    private double sh(double distance)
+    {
+        int alpha = 1;
+        double share = 5.0;
+        if (distance <= share) {
+            return 1 - Math.pow((distance/share), (double) alpha);
+        } else {
+            return 0.0;
+        }
+    }
+
 
     // Parent Selection: Ranking Selection
     private void rankingSelection()
@@ -381,8 +412,8 @@ public class Population implements EAPopulation
 
             double d11 = distance(p1, o1);
             double d12 = distance(p1, o2);
-            double d22 = distance(p2, o2);
             double d21 = distance(p2, o1);
+            double d22 = distance(p2, o2);
 
             if ((d11 + d22) < (d12 + d21)) {
                 if(o1.fitness > p1.fitness) {
@@ -484,8 +515,7 @@ public class Population implements EAPopulation
     public Individual[] getSelectedForExchange()
     {
         Individual[] tmp = new Individual[exchange.length];
-        for (int i = 0; i < exchange.length; i++)
-        {
+        for (int i = 0; i < exchange.length; i++) {
             tmp[i] = new Individual(exchange[i].value);
         }
         return tmp;
@@ -527,11 +557,10 @@ public class Population implements EAPopulation
     private double distance(Individual a, Individual b)
     {
         double d = 0.0;
-        for (int i = 0; i < a.value.length; i++)
-        {
+        for (int i = 0; i < a.value.length; i++) {
             d += Math.abs(a.value[i] - b.value[i]);
         }
-        return d / a.value.length;
+        return d;
     }
 
     public int size()

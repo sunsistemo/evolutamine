@@ -129,8 +129,7 @@ public class Population implements EAPopulation
 
         for (int i = 0; i < size; i++) {
             sumSharing = 0.0;
-            for (int j = 0; j < size; j++)
-            {
+            for (int j = 0; j < size; j++) {
                 sumSharing += sharing(distance(population.get(i), population.get(j)));
             }
             population.get(i).setFitness(population.get(i).fitness / sumSharing);

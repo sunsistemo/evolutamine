@@ -12,6 +12,7 @@ public class Individual
     public int rank;
     private double[] sigma;
     private double[] alpha;
+    private double[][] cov;
     private final double UB = 5.0;
     private final double LB = -UB;
 
@@ -116,13 +117,18 @@ public class Individual
         double beta = 5;
         int n = value.length;
         int sign;
+        int alpha_i;
         int n_alpha = (int) n * (n - 1) / 2;
         double tau = 0.05;    // local learning rate
         double tau2 = 0.9;   // global learning rate
         double epsilon = 0.001;
+        double[] means = new double[n];
+        double[] dx = new double[n];
         double gamma = tau2 * rnd.nextGaussian();
 
+        // Java automatically initializes doubles with 0
         alpha = new double[n_alpha];
+        cov = new double[n][n];
 
         for (int i = 0; i < n; i++) {
             double g = rnd.nextGaussian();
@@ -132,16 +138,31 @@ public class Individual
             for (int j = 0; j < n_alpha; j++) {
                 alpha[j] += beta * rnd.nextGaussian();
                 if (Math.abs(alpha[j]) > Math.PI) {
-                    if (alpha[j] >= 0) {
-                        sign = 1;
-                    } else {
-                        sign = -1;
-                    }
+                    sign = (int) Math.signum(alpha[j]);
                     alpha[j] = alpha[j] - 2 * Math.PI * sign;
                 }
             }
-            // TODO: figure out the covariance matrix p. 61
-            value[i] = boundedAdd(value[i], sigma[i] * g);
+        }
+
+        // construct covariance matrix
+        alpha_i = 0;
+        for (int x = 0; x < n; x++) {
+            cov[x][x] = Math.pow(sigma[x], 2);
+            for (int y = x + 1; y < n; y++) {
+                cov[x][y] = 0.5 * (Math.pow(sigma[x], 2) - Math.pow(sigma[y], 2)) * Math.tan(2 * alpha[alpha_i]);
+            }
+            alpha_i++;
+        }
+        // values below the diagonal are the same as above
+        for (int x = 0; x < n; x++) {
+            for (int y = 0; y < x; y++) {
+                cov[x][y] = cov[y][x];
+            }
+        }
+
+        dx = new MultivariateNormalDistribution(means, cov).sample();
+        for (int i = 0; i < n; i++) {
+            value[i] = boundedAdd(value[i], dx[i]);
         }
     }
 

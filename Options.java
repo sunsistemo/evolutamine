@@ -1,5 +1,10 @@
+import java.lang.Math;
+
+
 public class Options
 {
+    static final int DIMENSION = 10;
+
     static final double MUTATION_RATE = 0.1;
     static final double MUTATION_STEP_SIZE = 0.05;
 
@@ -51,9 +56,9 @@ public class Options
         recombination = Recombination.WHOLE_ARITHMETIC;
         mutation = Mutation.UNCORRELATED_N;
         survivorSelection = SurvivorSelection.MU_PLUS_LAMBDA;
-        tau = 0.025;
-        tau2 = 5;
-        epsilon = 0.001;
+        tau = 1 / Math.sqrt(2 * DIMENSION);
+        tau2 = 1 / Math.sqrt(2 * Math.sqrt(DIMENSION));
+        epsilon = 0.01;
     }
 
     public Options(Options opt)
@@ -73,6 +78,13 @@ public class Options
         this.tau = opt.tau;
         this.tau2 = opt.tau2;
         this.epsilon = opt.epsilon;
+    }
+
+    public void islandModel()
+    {
+        islandModel = true;
+        crowding = false;
+        fitnessSharing = false;
     }
 
     public void islandModel(int subPopulations, int exchangeRound)

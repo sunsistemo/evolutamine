@@ -16,11 +16,17 @@ public class IslandModel implements EAPopulation
 
         Options islandOptions = new Options(opt);
         for (int i = 0; i < NUM_POPULATIONS; i++) {
-            if (i % 2 == 0) {
-                islandOptions.parentSelection = Options.ParentSelection.EXPONENTIAL_RANKING;
-            } else {
-                islandOptions.parentSelection = Options.ParentSelection.LINEAR_RANKING;
-            }
+            //if (i % 2 == 0) {
+                //islandOptions.parentSelection = Options.ParentSelection.LINEAR_RANKING;
+                //islandOptions.recombination = Options.Recombination.WHOLE_ARITHMETIC;
+                //islandOptions.mutation = Options.Mutation.UNCORRELATED_N;
+                //islandOptions.survivorSelection = Options.SurvivorSelection.MU_PLUS_LAMBDA;
+            //} else {
+                //islandOptions.parentSelection = Options.ParentSelection.EXPONENTIAL_RANKING;
+                //islandOptions.recombination = Options.Recombination.BLEND_RECOMBINATION;
+                //islandOptions.mutation = Options.Mutation.UNCORRELATED_N;
+                //islandOptions.survivorSelection = Options.SurvivorSelection.GENERATIONAL;
+            //}
             populations[i] = new Population(subPopulationSize, new Options(islandOptions), rnd);
         }
     }

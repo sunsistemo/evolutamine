@@ -54,7 +54,6 @@ public class player50 implements ContestSubmission
         boolean bentCigar = !(isMultimodal || hasStructure || isSeparable);
         boolean katsuura  = isMultimodal && !(hasStructure || isSeparable);
         boolean schaffers = isMultimodal && hasStructure && !isSeparable;
-        // Do sth with property values, e.g. specify relevant settings of your algorithm
 
         options = new Options();
         if (bentCigar) {
@@ -69,6 +68,7 @@ public class player50 implements ContestSubmission
             int subPopulations = 10;
             int exchangeRound = 50;
             options.islandModel(subPopulations, exchangeRound);
+            options.recombination = Options.Recombination.BLEND_RECOMBINATION;
 
             double tau = 0.02;
             double tau2 = 2;
@@ -77,6 +77,7 @@ public class player50 implements ContestSubmission
         }
         if (schaffers) {
             populationSize = 1000;
+
             double tau = 0.02;
             double tau2 = 3;
             double epsilon = 0.001;

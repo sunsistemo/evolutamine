@@ -17,7 +17,7 @@ public class Population implements EAPopulation
     private List<Individual> population;
     private List<Individual> matingPool;
     private List<Individual> offspring;
-    private final int N = 10;
+    private final int N;
     private final int numParents = 2;
     private Random rnd;
     private Options options;
@@ -28,6 +28,7 @@ public class Population implements EAPopulation
         this.size = size;
         this.options = options;
         this.rnd = rnd;
+        this.N = options.DIMENSION;
 
         population = new ArrayList<Individual>();
         matingPool = new ArrayList<Individual>();

@@ -46,9 +46,9 @@ public class Population implements EAPopulation
      *
      */
 
-    /*
-     * Initialisation
-     */
+    /**************************************************************
+     * Initialisation                                             *
+     **************************************************************/
     private void populate(Random rnd)
     {
         for (int i = 0; i < size; i++) {
@@ -63,9 +63,9 @@ public class Population implements EAPopulation
         }
     }
 
-    /*
-     * Evaluation
-     */
+    /**************************************************************
+     * Evaluation                                                 *
+     **************************************************************/
     public int evaluateInitialPopulation(ContestEvaluation evaluation)
     {
         int evals = 0;
@@ -86,9 +86,9 @@ public class Population implements EAPopulation
         return evals; // return number of evaluations performed
     }
 
-    /*
-     * Parent Selection
-     */
+    /**************************************************************
+     * Parent Selection                                           *
+     **************************************************************/
     public void selectParents()
     {
         switch(options.parentSelection) {
@@ -110,7 +110,7 @@ public class Population implements EAPopulation
         }
     }
 
-    // Parent Selection: Fitness Proportional Selection
+    // Parent Selection: Fitness Proportional Selection p80
     private void fitnessProportionalSelection()
     {
         double sumFitness = 0.0;
@@ -123,33 +123,7 @@ public class Population implements EAPopulation
         sampleParents();
     }
 
-    // Multimodality: Fitness Sharing
-    private void applyFitnessSharing()
-    {
-        double sumSharing;
-
-        for (int i = 0; i < size; i++) {
-            sumSharing = 0.0;
-            for (int j = 0; j < size; j++) {
-                sumSharing += sharing(distance(population.get(i), population.get(j)));
-            }
-            population.get(i).setFitness(population.get(i).fitness / sumSharing);
-        }
-    }
-
-    private double sharing(double distance)
-    {
-        int alpha = 1;
-        double share = 5.0;
-        if (distance <= share) {
-            return 1 - Math.pow((distance/share), (double) alpha);
-        } else {
-            return 0.0;
-        }
-    }
-
-
-    // Parent Selection: Ranking Selection
+    // Parent Selection: Ranking Selection p81
     private void rankingSelection()
     {
         sortPopulation();
@@ -192,9 +166,9 @@ public class Population implements EAPopulation
         return (1 - Math.exp(-1 * rank));
     }
 
+    // Stochastic Universal Sampling (SUS) algorithm p.84
     private void sampleParents()
     {
-        // Stochastic Universal Sampling (SUS) algorithm p.84
         double r = (rnd.nextDouble() / ((double) offspringSize));
         int i = 0;
         double cumProbability = 0.0;
@@ -209,9 +183,9 @@ public class Population implements EAPopulation
         }
     }
 
-    /*
-     * Recombination
-     */
+    /**************************************************************
+     * Recombination                                              *
+     **************************************************************/
     public void crossover()
     {
         if(options.crowding) {
@@ -255,6 +229,7 @@ public class Population implements EAPopulation
         return parents;
     }
 
+    // Recombination: Discrete Recombination p65
     private double[][] discreteRecombination(double[][] parents)
     {
         double[][] children = new double[numParents][N];
@@ -270,6 +245,7 @@ public class Population implements EAPopulation
         return children;
     }
 
+    // Recombination: Simple Arithmetic Recombination p65
     private double[][] simpleArithmeticRecombination(double[][] parents)
     {
         double[][] children = new double[numParents][N];
@@ -291,6 +267,7 @@ public class Population implements EAPopulation
         return children;
     }
 
+    // Recombination: Single Arithmetic Recombination p66
     private double[][] singleArithmeticRecombination(double[][] parents)
     {
         double[][] children = new double[numParents][N];
@@ -310,6 +287,7 @@ public class Population implements EAPopulation
         return children;
     }
 
+    // Recombination: Whole Arithmetic Recombination p66
     private double[][] wholeArithmeticRecombination(double[][] parents)
     {
         double[][] children = new double[numParents][N];
@@ -323,6 +301,7 @@ public class Population implements EAPopulation
         return children;
     }
 
+    // Recombination: Blend Crossover p66
     private double[][] blendRecombination(double[][] parents)
     {
         // Blend Crossover p. 67
@@ -346,9 +325,9 @@ public class Population implements EAPopulation
         return children;
     }
 
-    /*
-     * Mutation
-     */
+    /**************************************************************
+     * Mutation                                                   *
+     **************************************************************/
     public void mutate()
     {
         for (Individual child: offspring) {
@@ -356,9 +335,9 @@ public class Population implements EAPopulation
         }
     }
 
-    /*
-     * Survivor Selection
-     */
+    /**************************************************************
+     * Survivor Selection                                         *
+     **************************************************************/
     public void selectSurvivors()
     {
         switch(options.survivorSelection) {
@@ -376,7 +355,6 @@ public class Population implements EAPopulation
 
     private void replacePopulationWithOffspring()
     {
-        // First version: Generational model. entire generation is replaced by offspring
         population.clear();
         for (Individual child: offspring) {
             population.add(child);
@@ -384,9 +362,9 @@ public class Population implements EAPopulation
         offspring.clear();
     }
 
+    // (μ + λ) selection. merge parents and offspring and keep top μ
     private void muPlusLambdaSelection()
     {
-        // (μ + λ) selection. merge parents and offspring and keep top μ
         int mu = size;
         int lambda = offspringSize;
         population.addAll(offspring);
@@ -450,7 +428,7 @@ public class Population implements EAPopulation
      *
      */
 
-    // Deterministic Crowding p94
+    // Multimodality: Deterministic Crowding p94
     public void deterministicCrowding()
     {
         double[][] parents = new double[numParents][N];
@@ -469,6 +447,33 @@ public class Population implements EAPopulation
             }
         }
     }
+
+    // Multimodality: Fitness Sharing p92
+    private void applyFitnessSharing()
+    {
+        double sumSharing;
+
+        for (int i = 0; i < size; i++) {
+            sumSharing = 0.0;
+            for (int j = 0; j < size; j++) {
+                sumSharing += sharing(distance(population.get(i), population.get(j)));
+            }
+            population.get(i).setFitness(population.get(i).fitness / sumSharing);
+        }
+    }
+
+    // Multimodality: Fitness Sharing p92
+    private double sharing(double distance)
+    {
+        int alpha = 1;
+        double share = 5.0;
+        if (distance <= share) {
+            return 1 - Math.pow((distance/share), (double) alpha);
+        } else {
+            return 0.0;
+        }
+    }
+
 
     /*
      *

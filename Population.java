@@ -546,15 +546,15 @@ public class Population implements EAPopulation
     }
 
     /*
-     * Calculates the distance between two individuals
+     * Calculates the Euclidean distance between two individuals
      */
     private double distance(Individual a, Individual b)
     {
         double d = 0.0;
         for (int i = 0; i < a.value.length; i++) {
-            d += Math.abs(a.value[i] - b.value[i]);
+            d += Math.pow(a.value[i] - b.value[i], 2);
         }
-        return d / a.value.length;
+        return Math.sqrt(d);
     }
 
     public int size()

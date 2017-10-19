@@ -58,9 +58,6 @@ public class player50 implements ContestSubmission
         options = new Options();
         if (bentCigar) {
             populationSize = 50;
-            int subPopulations = 1;
-            int exchangeRound = 50;
-            options.islandModel(subPopulations, exchangeRound);
 
             double tau = 0.025;
             double tau2 = 5;
@@ -68,10 +65,12 @@ public class player50 implements ContestSubmission
             options.mutationParameters(tau, tau2, epsilon);
         }
         if (katsuura) {
-            populationSize = 500;
+            populationSize = 250;
             int subPopulations = 5;
             int exchangeRound = 50;
-            options.islandModel(subPopulations, exchangeRound);
+            if (subPopulations > 1) {
+                options.islandModel(subPopulations, exchangeRound);
+            }
 
             double tau = 0.02;
             double tau2 = 2;
@@ -82,7 +81,9 @@ public class player50 implements ContestSubmission
             populationSize = 50;
             int subPopulations = 1;
             int exchangeRound = 50;
-            options.islandModel(subPopulations, exchangeRound);
+            if (subPopulations > 1) {
+                options.islandModel(subPopulations, exchangeRound);
+            }
 
             double tau = 0.02;
             double tau2 = 3;
@@ -92,7 +93,7 @@ public class player50 implements ContestSubmission
 
         // print population size settings
         System.out.print("Population size: " + populationSize);
-        if (options.islandModel && options.subPopulations > 1) {
+        if (options.islandModel) {
             System.out.print(" (" + options.subPopulations + " subpopulations of size ");
             System.out.print((populationSize / options.subPopulations) + ")");
         }
@@ -107,7 +108,7 @@ public class player50 implements ContestSubmission
         double mutation_epsilon = options.epsilon;
 
         // Create initial population and evaluate the fitness
-        if (options.islandModel && options.subPopulations > 1) {
+        if (options.islandModel) {
             population = new IslandModel(populationSize, new Options(options), rnd);
         } else {
             population = new Population(populationSize, new Options(options), rnd);
@@ -116,7 +117,7 @@ public class player50 implements ContestSubmission
 
         cycle = 0;
         while (evals > 0) {
-            if (options.islandModel && options.subPopulations > 1) {
+            if (options.islandModel) {
                 if (cycle % options.exchangeRound == 0) {
                     ((IslandModel) population).exchangeIndividuals();
                 }

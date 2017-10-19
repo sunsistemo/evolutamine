@@ -57,8 +57,8 @@ public class player50 implements ContestSubmission
 
         options = new Options();
         if (bentCigar) {
-            populationSize = 100;
-            int subPopulations = 2;
+            populationSize = 50;
+            int subPopulations = 1;
             int exchangeRound = 50;
             options.islandModel(subPopulations, exchangeRound);
 
@@ -105,7 +105,6 @@ public class player50 implements ContestSubmission
         //int evals = 2*populationSize;
         double eval_frac = ((double) evals) / evaluation_limit;
         double mutation_epsilon = options.epsilon;
-        //System.out.println("Eval Fraction: " + eval_frac + " Epsilon: " + mutation_epsilon);
 
         // Create initial population and evaluate the fitness
         if (options.islandModel && options.subPopulations > 1) {
@@ -126,8 +125,8 @@ public class player50 implements ContestSubmission
             // Time dependent variables
             eval_frac = ((double) evals) / evaluation_limit;
             mutation_epsilon = options.epsilon * Math.pow(eval_frac, 4);
-            //System.out.println("Eval Fraction: " + eval_frac + " Epsilon: " + mutation_epsilon);
 
+            // Select Parents
             population.selectParents();
 
             // Apply crossover / mutation operators

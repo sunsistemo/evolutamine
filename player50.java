@@ -57,36 +57,42 @@ public class player50 implements ContestSubmission
 
         options = new Options();
         if (bentCigar) {
-            populationSize = 50;
+            populationSize = 100;
+            int subPopulations = 2;
+            int exchangeRound = 50;
+            options.islandModel(subPopulations, exchangeRound);
+
             double tau = 0.025;
             double tau2 = 5;
-            double epsilon = 0.000001;
+            double epsilon = 0.1;
             options.mutationParameters(tau, tau2, epsilon);
         }
         if (katsuura) {
             populationSize = 500;
-            int subPopulations = 10;
+            int subPopulations = 5;
             int exchangeRound = 50;
             options.islandModel(subPopulations, exchangeRound);
-            options.recombination = Options.Recombination.BLEND_RECOMBINATION;
 
             double tau = 0.02;
             double tau2 = 2;
-            double epsilon = 0.001;
+            double epsilon = 0.2;
             options.mutationParameters(tau, tau2, epsilon);
         }
         if (schaffers) {
-            populationSize = 1000;
+            populationSize = 50;
+            int subPopulations = 1;
+            int exchangeRound = 50;
+            options.islandModel(subPopulations, exchangeRound);
 
             double tau = 0.02;
             double tau2 = 3;
-            double epsilon = 0.001;
+            double epsilon = 0.25;
             options.mutationParameters(tau, tau2, epsilon);
         }
 
         // print population size settings
         System.out.print("Population size: " + populationSize);
-        if (options.islandModel) {
+        if (options.islandModel && options.subPopulations > 1) {
             System.out.print(" (" + options.subPopulations + " subpopulations of size ");
             System.out.print((populationSize / options.subPopulations) + ")");
         }
@@ -97,10 +103,12 @@ public class player50 implements ContestSubmission
     {
         int evals = evaluation_limit;
         //int evals = 2*populationSize;
+        double eval_frac = ((double) evals) / evaluation_limit;
         double mutation_epsilon = options.epsilon;
+        //System.out.println("Eval Fraction: " + eval_frac + " Epsilon: " + mutation_epsilon);
 
         // Create initial population and evaluate the fitness
-        if (options.islandModel) {
+        if (options.islandModel && options.subPopulations > 1) {
             population = new IslandModel(populationSize, new Options(options), rnd);
         } else {
             population = new Population(populationSize, new Options(options), rnd);
@@ -109,13 +117,16 @@ public class player50 implements ContestSubmission
 
         cycle = 0;
         while (evals > 0) {
-            if (options.islandModel) {
+            if (options.islandModel && options.subPopulations > 1) {
                 if (cycle % options.exchangeRound == 0) {
                     ((IslandModel) population).exchangeIndividuals();
                 }
             }
 
             // Time dependent variables
+            eval_frac = ((double) evals) / evaluation_limit;
+            mutation_epsilon = options.epsilon * Math.pow(eval_frac, 4);
+            //System.out.println("Eval Fraction: " + eval_frac + " Epsilon: " + mutation_epsilon);
 
             population.selectParents();
 

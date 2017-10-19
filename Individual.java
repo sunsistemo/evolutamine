@@ -44,10 +44,10 @@ public class Individual
     {
         switch(method) {
             case UNIFORM:
-                uniformMutation(epsilon, rnd);
+                uniformMutation(rnd);
                 break;
             case NON_UNIFORM:
-                nonUniformMutation(epsilon, rnd);
+                nonUniformMutation(rnd);
                 break;
             case UNCORRELATED:
                 uncorrelatedMutationWithOneStepSize(epsilon, rnd);
@@ -61,7 +61,7 @@ public class Individual
         }
     }
 
-    private void uniformMutation(double epsilon, Random rnd)
+    private void uniformMutation(Random rnd)
     {
         for (int i = 0; i < value.length; i++) {
             double r = rnd.nextDouble();
@@ -75,7 +75,7 @@ public class Individual
     }
 
     // Page 57 of the book. Mutation probability per gene is 1, but sd controls to which extent
-    private void nonUniformMutation(double epsilon, Random rnd)
+    private void nonUniformMutation(Random rnd)
     {
         for (int i = 0; i < value.length; i++) {
             double h = rnd.nextGaussian() * sigma[0];
@@ -87,7 +87,6 @@ public class Individual
     {
         double tau = 0.9;
         //double epsilon = 0.025;
-        epsilon = 0.025;
         double gamma = tau * rnd.nextGaussian();
         sigma[0] *= Math.exp(gamma);
         sigma[0] = Math.max(sigma[0], epsilon);

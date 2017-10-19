@@ -97,6 +97,7 @@ public class player50 implements ContestSubmission
     {
         int evals = evaluation_limit;
         //int evals = 2*populationSize;
+        double mutation_epsilon = options.epsilon;
 
         // Create initial population and evaluate the fitness
         if (options.islandModel) {
@@ -114,11 +115,13 @@ public class player50 implements ContestSubmission
                 }
             }
 
+            // Time dependent variables
+
             population.selectParents();
 
             // Apply crossover / mutation operators
             population.crossover();
-            population.mutate();
+            population.mutate(mutation_epsilon);
 
             // Check fitness of unknown function
             try {

@@ -54,10 +54,10 @@ public class IslandModel implements EAPopulation
         }
     }
 
-    public void mutate()
+    public void mutate(double epsilon)
     {
         for (int i = 0; i < NUM_POPULATIONS; i++) {
-            populations[i].mutate();
+            populations[i].mutate(epsilon);
         }
     }
 

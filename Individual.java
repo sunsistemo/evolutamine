@@ -40,28 +40,28 @@ public class Individual
         this.fitness = fitness;
     }
 
-    public void mutate(Options.Mutation method, Random rnd)
+    public void mutate(Options.Mutation method, double epsilon, Random rnd)
     {
         switch(method) {
             case UNIFORM:
-                uniformMutation(rnd);
+                uniformMutation(epsilon, rnd);
                 break;
             case NON_UNIFORM:
-                nonUniformMutation(rnd);
+                nonUniformMutation(epsilon, rnd);
                 break;
             case UNCORRELATED:
-                uncorrelatedMutationWithOneStepSize(rnd);
+                uncorrelatedMutationWithOneStepSize(epsilon, rnd);
                 break;
             case UNCORRELATED_N:
-                uncorrelatedMutationWithNStepSizes(rnd);
+                uncorrelatedMutationWithNStepSizes(epsilon, rnd);
                 break;
             case CORRELATED:
-                correlatedMutation(rnd);
+                correlatedMutation(epsilon, rnd);
                 break;
         }
     }
 
-    private void uniformMutation(Random rnd)
+    private void uniformMutation(double epsilon, Random rnd)
     {
         for (int i = 0; i < value.length; i++) {
             double r = rnd.nextDouble();
@@ -75,7 +75,7 @@ public class Individual
     }
 
     // Page 57 of the book. Mutation probability per gene is 1, but sd controls to which extent
-    private void nonUniformMutation(Random rnd)
+    private void nonUniformMutation(double epsilon, Random rnd)
     {
         for (int i = 0; i < value.length; i++) {
             double h = rnd.nextGaussian() * sigma[0];
@@ -83,10 +83,11 @@ public class Individual
         }
     }
 
-    private void uncorrelatedMutationWithOneStepSize(Random rnd)
+    private void uncorrelatedMutationWithOneStepSize(double epsilon, Random rnd)
     {
         double tau = 0.9;
-        double epsilon = 0.025;
+        //double epsilon = 0.025;
+        epsilon = 0.025;
         double gamma = tau * rnd.nextGaussian();
         sigma[0] *= Math.exp(gamma);
         sigma[0] = Math.max(sigma[0], epsilon);
@@ -96,11 +97,11 @@ public class Individual
         }
     }
 
-    private void uncorrelatedMutationWithNStepSizes(Random rnd)
+    private void uncorrelatedMutationWithNStepSizes(double epsilon, Random rnd)
     {
         double tau = Options.tau;     // local learning rate (τ)
         double tau2 = Options.tau2;  // global learning rate (τ')
-        double epsilon = Options.epsilon;
+        //double epsilon = Options.epsilon;
 
         double gamma = tau2 * rnd.nextGaussian();
 
@@ -112,7 +113,7 @@ public class Individual
         }
     }
 
-    private void correlatedMutation(Random rnd)
+    private void correlatedMutation(double epsilon, Random rnd)
     {
         double beta = 5;
         int n = value.length;
@@ -121,7 +122,7 @@ public class Individual
         int n_alpha = (int) n * (n - 1) / 2;
         double tau = 0.05;    // local learning rate
         double tau2 = 0.9;   // global learning rate
-        double epsilon = 0.001;
+        //double epsilon = 0.001;
         double[] means = new double[n];
         double[] dx = new double[n];
         double gamma = tau2 * rnd.nextGaussian();

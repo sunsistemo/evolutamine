@@ -328,10 +328,10 @@ public class Population implements EAPopulation
     /**************************************************************
      * Mutation                                                   *
      **************************************************************/
-    public void mutate()
+    public void mutate(double epsilon)
     {
         for (Individual child: offspring) {
-            child.mutate(options.mutation, rnd);
+            child.mutate(options.mutation, epsilon, rnd);
         }
     }
 

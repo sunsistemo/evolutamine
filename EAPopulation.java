@@ -8,7 +8,7 @@ public interface EAPopulation
 
     public void crossover();
 
-    public void mutate();
+    public void mutate(double epsilon);
 
     public int evaluateOffspring(ContestEvaluation evaluation);
 

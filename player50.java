@@ -57,7 +57,7 @@ public class player50 implements ContestSubmission
 
         options = new Options();
         if (bentCigar) {
-            populationSize = 50;
+            populationSize = 40;
 
             double tau = 0.025;
             double tau2 = 5;
@@ -87,7 +87,7 @@ public class player50 implements ContestSubmission
 
             double tau = 0.02;
             double tau2 = 3;
-            double epsilon = 0.25;
+            double epsilon = 0.2;
             options.mutationParameters(tau, tau2, epsilon);
         }
 

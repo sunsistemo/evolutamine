@@ -86,7 +86,6 @@ public class Individual
     private void uncorrelatedMutationWithOneStepSize(double epsilon, Random rnd)
     {
         double tau = 0.9;
-        //double epsilon = 0.025;
         double gamma = tau * rnd.nextGaussian();
         sigma[0] *= Math.exp(gamma);
         sigma[0] = Math.max(sigma[0], epsilon);
@@ -100,7 +99,6 @@ public class Individual
     {
         double tau = Options.tau;     // local learning rate (τ)
         double tau2 = Options.tau2;  // global learning rate (τ')
-        //double epsilon = Options.epsilon;
 
         double gamma = tau2 * rnd.nextGaussian();
 
@@ -114,14 +112,15 @@ public class Individual
 
     private void correlatedMutation(double epsilon, Random rnd)
     {
+        double tau = 0.05;    // local learning rate
+        double tau2 = 0.9;   // global learning rate
+
         double beta = 5;
         int n = value.length;
         int sign;
         int alpha_i;
         int n_alpha = (int) n * (n - 1) / 2;
-        double tau = 0.05;    // local learning rate
-        double tau2 = 0.9;   // global learning rate
-        //double epsilon = 0.001;
+
         double[] means = new double[n];
         double[] dx = new double[n];
         double gamma = tau2 * rnd.nextGaussian();

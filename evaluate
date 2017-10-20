@@ -3,6 +3,10 @@ import argparse
 import re
 from subprocess import PIPE, run
 
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -11,6 +15,7 @@ def main():
     parser.add_argument("-k", help="evaluate KatsuuraEvaluation", action="store_true")
     parser.add_argument("-s", help="evaluate SchaffersEvaluation", action="store_true")
     parser.add_argument("-a", help="test all functions", action="store_true")
+    parser.add_argument("-p", "--plot", help="make a boxplot of the scores", action="store_true")
     args = parser.parse_args()
 
     functions = ["BentCigarFunction", "KatsuuraEvaluation", "SchaffersEvaluation"]
@@ -33,9 +38,21 @@ def main():
         bent = get_score(functions[0], args.n)
         katsuura = get_score(functions[1], args.n)
         schaffers = get_score(functions[2], args.n)
-        print("BentCigarFunction   - average of {}: {}".format(args.n, bent))
-        print("KatsuuraEvaluation  - average of {}: {}".format(args.n, katsuura))
-        print("SchaffersEvaluation - average of {}: {}".format(args.n, schaffers))
+        results = [bent, katsuura, schaffers]
+        data = [x[0] for x in results]
+        scores = [x[1] for x in results]
+        errors = [x[2] for x in results]
+        print("BentCigarFunction   - average of {}: {} ± {}".format(args.n, scores[0], errors[0]))
+        print("KatsuuraEvaluation  - average of {}: {} ± {}".format(args.n, scores[1], errors[1]))
+        print("SchaffersEvaluation - average of {}: {} ± {}".format(args.n, scores[2], errors[2]))
+
+        if args.plot:
+            ax = sns.boxplot(x=["BentCigar", "Katsuura", "Schaffers"], y=data)
+            sns.set_style("whitegrid")
+            plt.xlabel("Function")
+            plt.ylabel("Score")
+            plt.savefig("results_n{}.png".format(args.n), dpi=400)
+
         return
 
     # no flags given
@@ -44,15 +61,15 @@ def main():
     print("Average of {}: {}".format(args.n, score))
 
 def get_score(function: str, n: int):
-        scores = 0.
+        scores = []
         for i in range(n):
             output = run("make run FUNC={}".format(function).split(), stdout=PIPE).stdout.decode("utf-8")
             print(output)
             start = output.find("Score: ")
             score = re.match("\d+\.\d+", output[start + 7:])
             score = float(score.group())
-            scores += score
-        return scores / n
+            scores.append(score)
+        return np.array(scores), sum(scores) / n, np.std(scores)
 
 
 if __name__ == "__main__":

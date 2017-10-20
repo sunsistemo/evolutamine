@@ -1,0 +1,123 @@
+%%%%% Beginning of preamble %%%%%
+\documentclass[9pt,twocolumn]{extarticle}
+
+%Packages to load which give you useful commands
+\usepackage[utf8]{inputenc}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage[font={footnotesize}]{caption}
+\captionsetup[figure]{labelfont=bf}
+\captionsetup[table]{labelfont=bf}
+\usepackage{subcaption}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{verbatim}
+\usepackage{placeins}
+\usepackage{xspace}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks,citecolor=black,filecolor=black,linkcolor=black,urlcolor=black}
+\usepackage[titletoc,title]{appendix}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{diagbox}
+\usepackage{makecell}
+%\usepackage{array,booktabs}
+\usepackage{pgfplots}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\usepackage{wasysym}
+\usepackage{lipsum}
+
+
+%Sets the margins
+\textwidth = 7 in
+\textheight = 9.5 in
+\oddsidemargin = -0.3 in
+\evensidemargin = -0.3 in
+\topmargin = -0.4 in
+\headheight = 0.0 in
+\headsep = 0.0 in
+%\parskip = 0.2in
+\parindent = 0.5in
+\textfloatsep = 0.2in
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+
+%lstlistings settings
+\lstset{
+  language=R,
+  basicstyle=\ttfamily\scriptsize,
+  numbers=left,
+  numberstyle=\tiny\color{black},
+  stepnumber=1,
+  numbersep=5pt,
+  backgroundcolor=\color{white},
+  tabsize=2,
+  captionpos=b,
+  extendedchars=true,
+  breaklines=true,
+  xleftmargin=.25in,
+  xrightmargin=.25in,
+    showstringspaces=false
+}
+
+% minted framebox
+\usepackage[]{minted}
+\usepackage{tcolorbox}
+\usepackage{etoolbox}
+\BeforeBeginEnvironment{minted}{\hspace{-0.5em}\begin{tcolorbox}[]}%
+    \AfterEndEnvironment{minted}{\end{tcolorbox}}%
+
+% Lessen paragraph indentation
+\setlength\parindent{2ex}
+
+% custom commands
+\newcommand{\sympy}{\texttt{SymPy}\xspace}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\pvalue}{\textit{p}-value\xspace}
+\newcommand{\anova}{\textsc{anova}\xspace}
+\newcommand{\ancova}{\textsc{ancova}\xspace}
+\newcommand{\norm}[2]{\|#1\|_#2}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\minus}{\scalebox{0.75}[1.0]{$-$}}
+\newcommand{\cond}{\text{cond}}
+\newcommand{\expect}[1]{\mathop{{}\mathbb{E}}[#1]}
+\newcommand{\expectt}[2]{\mathop{{}\mathbb{E}_{#1}}[#2]}
+\newcommand{\real}{\mathop{{}\mathbb{R}}}
+\newcommand{\nat}{\mathop{{}\mathbb{N}}}
+\newcommand{\var}[1]{\text{Var($#1$)}}
+\newcommand{\varb}[1]{\text{Var\big($#1$\big)}}
+\providecommand{\e}[1]{\ensuremath{\times 10^{#1}}}
+\newcommand{\len}{\ell}
+\newcommand{\sumpx}{\sum_{x \in X}P_X(x)}
+\newcommand{\entropy}{\sumpx \cdot \log\frac{1}{P_X(x)}}
+\newcommand{\avglen}{\sumpx \cdot \ell(C(x))}
+\newcommand{\probset}[3]{{#1}_{#2}^{(#3)}}
+\newcommand{\typical}{\probset{A}{\epsilon}{n}}
+\newcommand{\smallest}{\probset{B}{\delta}{n}}
+\newcommand{\mupos}{\mu_{\text{pos}}}
+\newcommand{\muneg}{\mu_{\text{neg}}}
+\newcommand{\inner}[2]{\langle #1, #2\rangle}
+\newcommand{\tand}{~\text{and}~}
+\newcommand{\tor}{~\text{or}~}
+\newcommand{\limninf}{\lim\limits_{n \to \infty}}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\book}{book by Eiben and Smith \cite{eiben2003introduction}\xspace}
+
+\def\app#1#2{%
+    \mathrel{%
+        \setbox0=\hbox{$#1\sim$}%
+        \setbox2=\hbox{%
+            \rlap{\hbox{$#1\propto$}}%
+            \lower1.1\ht0\box0%
+        }%
+        \raise0.25\ht2\box2%
+    }%
+}
+\def\approxprop{\mathpalette\app\relax}
+\pgfplotsset{compat=1.12}
+%%%%% End of preamble %%%%%

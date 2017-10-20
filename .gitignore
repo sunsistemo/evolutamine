@@ -1,3 +1,13 @@
 *.class
 *.jar
 tmp/
+
+*.aux
+*.bbl
+*.blg
+*.fls
+*.log
+*.out
+*.fdb_latexmk
+*.pdf
+_minted-main
